@@ -1,0 +1,5 @@
+.phalcon
+.git
+.idea
+cache
+!.gitkeep
