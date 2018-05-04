@@ -2,4 +2,5 @@
 .git
 .idea
 cache
+gantt_log.txt
 !.gitkeep
