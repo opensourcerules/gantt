@@ -110,5 +110,6 @@ class HistoryMigration_100 extends Migration
      */
     public function down()
     {
+        self::$_connection->dropTable('history');
     }
 }
