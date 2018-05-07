@@ -36,6 +36,7 @@ $di->setShared('view', function () {
     $view = new View();
     $view->setDI($this);
     $view->setViewsDir($config->application->viewsDir);
+    $view->setLayout('common');
 
     $view->registerEngines([
         '.volt' => function ($view) {
