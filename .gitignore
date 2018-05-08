@@ -1,6 +1,4 @@
 .phalcon
 .git
 .idea
-cache
-logs
 !.gitkeep
