@@ -14,7 +14,8 @@ Create a new MySql database with user and password. **The user must have all pri
 
 ## Setting up the database connection
 
-Edit _app/config/config.php_ and enter your database details
+Edit _app/config/config.php_ and enter your database details.
+
 Example:
 ```
     'database' => [
