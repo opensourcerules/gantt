@@ -23,7 +23,7 @@ Example:
 
 ##Creating database structure
 Using **phalcon devtools _change directory_ to the project's folder** and run:
-```phalcon migration ru```
+```phalcon migration run```
 
 
 ##Built with
