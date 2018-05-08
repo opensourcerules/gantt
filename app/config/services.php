@@ -1,7 +1,6 @@
 <?php
 
 use Phalcon\Mvc\View;
-use Phalcon\Mvc\View\Engine\Php as PhpEngine;
 use Phalcon\Mvc\Url as UrlResolver;
 use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
 use Phalcon\Mvc\Model\Metadata\Memory as MetaDataAdapter;
@@ -28,6 +27,25 @@ $di->setShared('url', function () {
 });
 
 /**
+ * Register Volt as a service
+ */
+$di->set(
+    'voltService',
+    function ($view) {
+        $config = $this->getConfig();
+
+        $volt = new VoltEngine($view, $this);
+
+        $volt->setOptions([
+            'compiledPath' => $config->application->cacheDir,
+            'compiledSeparator' => '_'
+        ]);
+
+        return $volt;
+    }
+);
+
+/**
  * Setting up the view component
  */
 $di->setShared('view', function () {
@@ -36,22 +54,10 @@ $di->setShared('view', function () {
     $view = new View();
     $view->setDI($this);
     $view->setViewsDir($config->application->viewsDir);
+    $view->setMainView('main');
 
     $view->registerEngines([
-        '.volt' => function ($view) {
-            $config = $this->getConfig();
-
-            $volt = new VoltEngine($view, $this);
-
-            $volt->setOptions([
-                'compiledPath' => $config->application->cacheDir,
-                'compiledSeparator' => '_'
-            ]);
-
-            return $volt;
-        },
-        '.phtml' => PhpEngine::class
-
+        '.phtml' => 'voltService'
     ]);
 
     return $view;

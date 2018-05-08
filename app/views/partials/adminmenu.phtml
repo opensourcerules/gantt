@@ -1,0 +1,35 @@
+<nav class="navbar navbar-expand-sm navbar-light bg-white">
+    <span class="navbar-brand mb-0 h1">Admin Menu:</span>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#adminNavbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="adminNavbarSupportedContent">
+        <ul class="navbar-nav nav-fill w-100 mr-auto">
+            <li class="nav-item dropdown">
+                {{ link_to('#', 'Worker', 'class': 'nav-link dropdown-toggle', 'data-toggle': 'dropdown') }}
+                <div class="dropdown-menu">
+                    {{ link_to('worker/register', 'Register Worker', 'class': 'dropdown-item') }}
+                    {{ link_to('worker/edit', 'Edit Worker', 'class': 'dropdown-item') }}
+                </div>
+            </li>
+
+            <li class="nav-item dropdown">
+                {{ link_to('#', 'Project', 'class': 'nav-link dropdown-toggle', 'data-toggle': 'dropdown') }}
+                <div class="dropdown-menu">
+                    {{ link_to('project/register', 'Register Project', 'class': 'dropdown-item') }}
+                    {{ link_to('project/edit', 'Edit Project', 'class': 'dropdown-item') }}
+                </div>
+            </li>
+
+            <li class="nav-item dropdown">
+                {{ link_to('#', 'Assign/Remove', 'class': 'nav-link dropdown-toggle', 'data-toggle': 'dropdown') }}
+                <div class="dropdown-menu">
+                    {{ link_to('worker/assign', 'Assign Worker to Project', 'class': 'dropdown-item') }}
+                    {{ link_to('worker/unassign', 'Remove Worker from Project', 'class': 'dropdown-item') }}
+                </div>
+            </li>
+
+            <li class="nav-item">{{ link_to('worker/logout', 'Logout', 'class': 'nav-link') }}</li>
+        </ul>
+    </div>
+</nav>
