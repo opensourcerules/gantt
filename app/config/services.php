@@ -6,12 +6,13 @@ use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
 use Phalcon\Mvc\Model\Metadata\Memory as MetaDataAdapter;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
 use Phalcon\Flash\Direct as Flash;
+use Phalcon\Security;
 
 /**
  * Shared configuration service
  */
 $di->setShared('config', function () {
-    return include APP_PATH . "/config/config.php";
+    return include APP_PATH . '/config/config.php';
 });
 
 /**
@@ -29,9 +30,7 @@ $di->setShared('url', function () {
 /**
  * Register Volt as a service
  */
-$di->set(
-    'voltService',
-    function ($view) {
+$di->set('voltService', function ($view) {
         $config = $this->getConfig();
 
         $volt = new VoltEngine($view, $this);
@@ -42,8 +41,7 @@ $di->set(
         ]);
 
         return $volt;
-    }
-);
+});
 
 /**
  * Setting up the view component
@@ -91,14 +89,12 @@ $di->setShared('db', function () {
 /**
  * If the configuration specify the use of metadata adapter use it or use memory otherwise
  */
-$di->setShared('modelsMetadata', function () {
-    return new MetaDataAdapter();
-});
+$di->setShared('modelsMetadata', MetaDataAdapter::class);
 
 /**
  * Register the session flash service with the Twitter Bootstrap classes
  */
-$di->set('flash', function () {
+$di->setShared('flash', function () {
     return new Flash([
         'error'   => 'alert alert-danger',
         'success' => 'alert alert-success',
@@ -118,11 +114,20 @@ $di->setShared('session', function () {
 });
 
 /**
- * Register the workers' helpers
+ * Register security services
  */
-$di->set(
-    'workersHelpers',
-    function () {
-        return new WorkersHelpers();
-    }
-);
+$di->setShared('security', function () {
+    $security = new Security();
+
+    // Set the password hashing factor to 12 rounds
+    $security->setWorkFactor(12);
+
+    return $security;
+});
+
+/**
+ * Register the workers' services
+ */
+$di->set('WorkersServices', function () {
+        return new WorkersServices($this->get('session'), $this->get('security'));
+});

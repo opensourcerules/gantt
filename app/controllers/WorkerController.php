@@ -3,7 +3,7 @@
 class WorkerController extends ControllerBase
 {
     /**
-     * @var WorkersHelpers
+     * @var WorkersServices
      */
     private $helper;
 
@@ -12,37 +12,29 @@ class WorkerController extends ControllerBase
      */
     public function initialize()
     {
-        if (null === $this->helper) {
-            $this->helper = \Phalcon\Di::getDefault()->get('workersHelpers');
-        }
+        $this->helper = $this->getDi()->get('WorkersServices');
     }
 
     /**
      * Performs the login
      * @param string $access
-     * @return void
      */
     public function loginAction(string $access = '')
     {
         if (null === $access) {
             $this->response->redirect('');
-            return;
         }
         $workersHelpers = $this->helper;
         $success = $workersHelpers->login($access);
 
-        if (false === $success) {
-            $this->flash->notice('Wrong url.');
-
-            return;
+        if (true === $success) {
+            $this->response->redirect('');
         }
-
-        $this->response->redirect('');
+        $this->flash->notice('Wrong url.');
     }
 
     /**
      * Performs the logout
-     * @return void
      */
     public function logoutAction()
     {

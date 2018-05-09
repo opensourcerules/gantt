@@ -4,7 +4,6 @@ use Phalcon\Mvc\Model;
 
 class Workers extends Model
 {
-
     /**
      *
      * @var integer
@@ -142,28 +141,6 @@ class Workers extends Model
     public function getPassword()
     {
         return $this->password;
-    }
-
-    /**
-     * Allows to query a set of records that match the specified conditions
-     *
-     * @param mixed $parameters
-     * @return Workers[]|Workers|\Phalcon\Mvc\Model\ResultSetInterface
-     */
-    public static function find($parameters = null)
-    {
-        return parent::find($parameters);
-    }
-
-    /**
-     * Allows to query the first record that match the specified conditions
-     *
-     * @param mixed $parameters
-     * @return Workers|\Phalcon\Mvc\Model\ResultInterface
-     */
-    public static function findFirst($parameters = null)
-    {
-        return parent::findFirst($parameters);
     }
 
     /**
