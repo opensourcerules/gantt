@@ -116,3 +116,13 @@ $di->setShared('session', function () {
 
     return $session;
 });
+
+/**
+ * Register the workers' helpers
+ */
+$di->set(
+    'workersHelpers',
+    function () {
+        return new WorkersHelpers();
+    }
+);
