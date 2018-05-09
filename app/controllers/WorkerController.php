@@ -13,7 +13,6 @@ class WorkerController extends ControllerBase
     public function initialize()
     {
         if (null === $this->helper) {
-            //$this->helper = $this->workersHelpers;
             $this->helper = \Phalcon\Di::getDefault()->get('workersHelpers');
         }
     }

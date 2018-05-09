@@ -24,9 +24,9 @@ class WorkersHelpers
     {
         $admin = Workers::findFirst(
             [
-                "id = :id:",
-                "bind" => [
-                    "id"    => $workerId,
+                'id = :id:',
+                'bind' => [
+                    'id'    => $workerId,
                 ]
             ]
         );
