@@ -1,35 +1,41 @@
 <?php
 
+namespace GanttDashboard\App\Controllers;
+
+use GanttDashboard\App\Services\HandleWorker;
+
 class WorkerController extends ControllerBase
 {
     /**
-     * @var WorkersServices
+     * @var HandleWorker
      */
-    private $helper;
+    private $handleWorker;
 
     /**
-     * Initialises the helper property
+     * Initialises the handleWorker property
      */
-    public function initialize()
+    public function onConstruct()
     {
-        $this->helper = $this->getDi()->get('WorkersServices');
+        $this->handleWorker = $this->getDi()->get(HandleWorker::class);
     }
 
     /**
      * Performs the login
-     * @param string $access
+     * @param string $accessKey
      */
-    public function loginAction(string $access = '')
+    public function loginAction(string $accessKey = '')
     {
-        if (null === $access) {
+        if ('' === $accessKey) {
             $this->response->redirect('');
         }
-        $workersHelpers = $this->helper;
-        $success = $workersHelpers->login($access);
+
+        $handleWorker = $this->handleWorker;
+        $success = $handleWorker->login($accessKey);
 
         if (true === $success) {
             $this->response->redirect('');
         }
+
         $this->flash->notice('Wrong url.');
     }
 
@@ -38,8 +44,9 @@ class WorkerController extends ControllerBase
      */
     public function logoutAction()
     {
-        $workersHelpers = $this->helper;
-        $workersHelpers->logout();
+        $handleWorker = $this->handleWorker;
+        $handleWorker->logout();
+
         $this->response->redirect('');
     }
 }

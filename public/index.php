@@ -1,4 +1,7 @@
 <?php
+
+namespace GanttDashboard;
+
 use Phalcon\Di\FactoryDefault;
 
 error_reporting(E_ALL);

@@ -1,5 +1,7 @@
 <?php
 
+namespace GanttDashboard\App\Models;
+
 use Phalcon\Mvc\Model;
 
 class Workers extends Model
@@ -40,6 +42,13 @@ class Workers extends Model
      * @Column(column="password", type="string", length=255, nullable=true)
      */
     protected $password;
+
+    /**
+     *
+     * @var boolean
+     * @Column(column="admin", type="boolean", default=false)
+     */
+    protected $admin;
 
     /**
      * Method to set the value of field lastName
@@ -89,6 +98,19 @@ class Workers extends Model
     public function setPassword($password)
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * Method to set the value of field admin
+     *
+     * @param boolean $admin
+     * @return $this
+     */
+    public function setAdmin($admin)
+    {
+        $this->admin = $admin;
 
         return $this;
     }
@@ -144,6 +166,16 @@ class Workers extends Model
     }
 
     /**
+     * Returns the value of field admin
+     *
+     * @return boolean
+     */
+    public function getAdmin()
+    {
+        return $this->admin;
+    }
+
+    /**
      * Independent Column Mapping.
      * Keys are the real names in the table and the values their names in the application
      *
@@ -156,7 +188,8 @@ class Workers extends Model
             'last_name' => 'lastName',
             'first_name' => 'firstName',
             'email' => 'email',
-            'password' => 'password'
+            'password' => 'password',
+            'admin' => 'admin'
         ];
     }
 }

@@ -7,6 +7,9 @@ use Phalcon\Mvc\Model\Metadata\Memory as MetaDataAdapter;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
 use Phalcon\Flash\Direct as Flash;
 use Phalcon\Security;
+use GanttDashboard\App\Models\Workers;
+use GanttDashboard\App\Services\HandleWorker;
+use Phalcon\Mvc\Dispatcher;
 
 /**
  * Shared configuration service
@@ -85,11 +88,10 @@ $di->setShared('db', function () {
     return $connection;
 });
 
-
 /**
  * If the configuration specify the use of metadata adapter use it or use memory otherwise
  */
-$di->setShared('modelsMetadata', MetaDataAdapter::class);
+$di->setShared(MetaDataAdapter::class, MetaDataAdapter::class);
 
 /**
  * Register the session flash service with the Twitter Bootstrap classes
@@ -126,8 +128,30 @@ $di->setShared('security', function () {
 });
 
 /**
- * Register the workers' services
+ * Register Workers model
  */
-$di->set('WorkersServices', function () {
-        return new WorkersServices($this->get('session'), $this->get('security'));
+$di->setShared(Workers::class, Workers::class);
+
+/**
+ * Register HandleWorker service
+ */
+$di->setShared(HandleWorker::class, function () {
+        return new HandleWorker(
+            $this->get('session'),
+            $this->get('security'),
+            $this->get(Workers::class)
+        );
+});
+
+/**
+ * Registering a dispatcher
+ */
+$di->set('dispatcher', function () {
+    $dispatcher = new Dispatcher();
+
+    $dispatcher->setDefaultNamespace(
+        'GanttDashboard\\App\\Controllers'
+    );
+
+    return $dispatcher;
 });
