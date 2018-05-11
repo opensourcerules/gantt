@@ -2,19 +2,26 @@
 
 $router = $di->getRouter();
 
-// Define your routes here
-
-$router->add('/', [
+/**
+ * Add index route with index action
+ */
+$router->addGet('/', [
     'controller' => 'Index',
     'action'     => 'index',
-    ]);
+]);
 
-$router->add('/worker/login', [
+/**
+ * Add worker route with login action
+ */
+$router->addGet('/worker/login', [
     'controller' => 'Worker',
     'action'     => 'login',
-    ]);
+]);
 
-$router->add('/worker/logout', [
+/**
+ * Add worker route with logout action
+ */
+$router->addGet('/worker/logout', [
     'controller' => 'Worker',
     'action'     => 'logout',
 ]);

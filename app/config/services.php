@@ -5,11 +5,14 @@ use Phalcon\Mvc\Url as UrlResolver;
 use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
 use Phalcon\Mvc\Model\Metadata\Memory as MetaDataAdapter;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
-use Phalcon\Flash\Direct as Flash;
+use Phalcon\Flash\Direct as FlashDirect;
+use Phalcon\Flash\Session as FlashSession;
 use Phalcon\Security;
 use GanttDashboard\App\Models\Workers;
-use GanttDashboard\App\Services\HandleWorker;
+use GanttDashboard\App\Services\Worker as WorkerService;
 use Phalcon\Mvc\Dispatcher;
+use Phalcon\Events\Manager;
+use Phalcon\Dispatcher as DispatcherConstants;
 
 /**
  * Shared configuration service
@@ -34,16 +37,16 @@ $di->setShared('url', function () {
  * Register Volt as a service
  */
 $di->set('voltService', function ($view) {
-        $config = $this->getConfig();
+    $config = $this->getConfig();
 
-        $volt = new VoltEngine($view, $this);
+    $volt = new VoltEngine($view, $this);
 
-        $volt->setOptions([
-            'compiledPath' => $config->application->cacheDir,
-            'compiledSeparator' => '_'
-        ]);
+    $volt->setOptions([
+        'compiledPath' => $config->application->cacheDir,
+        'compiledSeparator' => '_'
+    ]);
 
-        return $volt;
+    return $volt;
 });
 
 /**
@@ -94,10 +97,22 @@ $di->setShared('db', function () {
 $di->setShared(MetaDataAdapter::class, MetaDataAdapter::class);
 
 /**
- * Register the session flash service with the Twitter Bootstrap classes
+ * Register the flash service with the Twitter Bootstrap classes
  */
 $di->setShared('flash', function () {
-    return new Flash([
+    return new FlashDirect([
+        'error'   => 'alert alert-danger',
+        'success' => 'alert alert-success',
+        'notice'  => 'alert alert-info',
+        'warning' => 'alert alert-warning'
+    ]);
+});
+
+/**
+ * Register the session flash service with the Twitter Bootstrap classes
+ */
+$di->setShared('flashSession', function () {
+    return new FlashSession([
         'error'   => 'alert alert-danger',
         'success' => 'alert alert-success',
         'notice'  => 'alert alert-info',
@@ -121,7 +136,9 @@ $di->setShared('session', function () {
 $di->setShared('security', function () {
     $security = new Security();
 
-    // Set the password hashing factor to 12 rounds
+    /**
+     * Set the password hashing factor to 12 rounds
+     */
     $security->setWorkFactor(12);
 
     return $security;
@@ -133,10 +150,10 @@ $di->setShared('security', function () {
 $di->setShared(Workers::class, Workers::class);
 
 /**
- * Register HandleWorker service
+ * Register Worker service
  */
-$di->setShared(HandleWorker::class, function () {
-        return new HandleWorker(
+$di->setShared(WorkerService::class, function () {
+        return new WorkerService(
             $this->get('session'),
             $this->get('security'),
             $this->get(Workers::class)
@@ -144,11 +161,43 @@ $di->setShared(HandleWorker::class, function () {
 });
 
 /**
- * Registering a dispatcher
+ * Register a dispatcher
  */
 $di->set('dispatcher', function () {
     $dispatcher = new Dispatcher();
 
+    /**
+     * Create an EventManager
+     */
+    $eventsManager = new Manager();
+
+    /**
+     * Attach a listener
+     */
+    $eventsManager->attach('dispatch', function ($event, $dispatcher, $exception) {
+
+        /**
+         * Dispatch to notFound404 action in case controller or action doesn't exist
+         */
+        if ($event->getType() == 'beforeException') {
+            switch ($exception->getCode()) {
+                case DispatcherConstants::EXCEPTION_HANDLER_NOT_FOUND:
+                case DispatcherConstants::EXCEPTION_INVALID_HANDLER:
+                case DispatcherConstants::EXCEPTION_ACTION_NOT_FOUND:
+                case DispatcherConstants::EXCEPTION_INVALID_PARAMS:
+                    $dispatcher->forward([
+                        'controller' => 'Index',
+                        'action' => 'notFound404'
+                    ]);
+
+                    return false;
+            }
+        }
+
+        return true;
+    });
+
+    $dispatcher->setEventsManager($eventsManager);
     $dispatcher->setDefaultNamespace(
         'GanttDashboard\\App\\Controllers'
     );

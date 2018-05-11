@@ -6,37 +6,37 @@ use GanttDashboard\App\Models\Workers;
 use Phalcon\Session\Adapter\Files;
 use Phalcon\Security;
 
-class HandleWorker
+class Worker
 {
     /**
      * @var Files
      */
-    private $session;
+    private $sessionService;
 
     /**
      * @var Security
      */
-    private $security;
+    private $securityService;
 
     /**
      * @var Workers
      */
-    private $worker;
+    private $workerModel;
 
     /**
-     * HandleWorker constructor.
+     * Worker constructor.
      * @param Files $sessionService
      * @param Security $securityService
-     * @param Workers $worker
+     * @param Workers $workerModel
      */
     public function __construct(
         Files $sessionService,
         Security $securityService,
-        Workers $worker
+        Workers $workerModel
     ) {
-        $this->session = $sessionService;
-        $this->security = $securityService;
-        $this->worker = $worker;
+        $this->sessionService = $sessionService;
+        $this->securityService = $securityService;
+        $this->workerModel = $workerModel;
     }
 
     /**
@@ -45,13 +45,13 @@ class HandleWorker
      */
     public function login(string $accessKey)
     {
-        $admins = $this->worker->find([
+        $admins = $this->workerModel->find([
             'admin = 1',
         ]);
 
         foreach ($admins as $admin) {
-            if (true === $this->security->checkHash($accessKey, $admin->getPassword())) {
-                $this->session->set('worker_session', $admin->getId());
+            if (true === $this->securityService->checkHash($accessKey, $admin->getPassword())) {
+                $this->sessionService->set('worker_session', $admin->getId());
 
                 return true;
             }
@@ -65,6 +65,6 @@ class HandleWorker
      */
     public function logout()
     {
-        $this->session->remove('worker_session');
+        $this->sessionService->remove('worker_session');
     }
 }

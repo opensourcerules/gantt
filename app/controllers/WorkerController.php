@@ -2,21 +2,21 @@
 
 namespace GanttDashboard\App\Controllers;
 
-use GanttDashboard\App\Services\HandleWorker;
+use GanttDashboard\App\Services\Worker as WorkerService;
 
 class WorkerController extends ControllerBase
 {
     /**
-     * @var HandleWorker
+     * @var WorkerService
      */
-    private $handleWorker;
+    private $workerService;
 
     /**
-     * Initialises the handleWorker property
+     * Initialises the workerService property
      */
     public function onConstruct()
     {
-        $this->handleWorker = $this->getDi()->get(HandleWorker::class);
+        $this->workerService = $this->getDi()->get(WorkerService::class);
     }
 
     /**
@@ -25,18 +25,15 @@ class WorkerController extends ControllerBase
      */
     public function loginAction(string $accessKey = '')
     {
-        if ('' === $accessKey) {
-            $this->response->redirect('');
-        }
-
-        $handleWorker = $this->handleWorker;
-        $success = $handleWorker->login($accessKey);
+        $redirect = 'index/notFound404';
+        $success = $this->workerService->login($accessKey);
 
         if (true === $success) {
-            $this->response->redirect('');
+            $this->flashSession->success('You are now logged in as ADMIN!');
+            $redirect = '';
         }
 
-        $this->flash->notice('Wrong url.');
+        $this->response->redirect($redirect);
     }
 
     /**
@@ -44,9 +41,8 @@ class WorkerController extends ControllerBase
      */
     public function logoutAction()
     {
-        $handleWorker = $this->handleWorker;
-        $handleWorker->logout();
-
+        $this->workerService->logout();
+        $this->flashSession->success('You are now logged out!');
         $this->response->redirect('');
     }
 }
