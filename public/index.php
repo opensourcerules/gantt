@@ -5,35 +5,30 @@ namespace GanttDashboard;
 use Phalcon\Di\FactoryDefault;
 
 /**
- * APPLICATION ENVIRONMENT
+ * Application environment
  */
-define('ENVIRONMENT', isset($_SERVER['APP_ENV']) ? $_SERVER['APP_ENV'] : 'development');
+$environment = isset($_SERVER['APP_ENV']) ? strtolower($_SERVER['APP_ENV']) : 'development';
 
 /**
- * ERROR REPORTING
+ * Error reporting
  */
-$environments = ['testing', 'production', 'development'];
-
-if (false === in_array(ENVIRONMENT, $environments)) {
+if (false === in_array($environment, ['testing', 'production', 'development'])) {
     header('HTTP/1.1 503 Service Unavailable.', true, 503);
     echo 'The application environment is not set correctly.';
     exit(1);
 }
 
-array_pop($environments);
-$errorReportingAll = true;
+$errorReporting = E_ALL;
 $displayErrorsParam  = 1;
 $logErrorsParam      = 1;
 
-if (true === in_array(ENVIRONMENT, $environments)) {
-    $errorReportingAll = false;
+if ($environment !== 'development') {
+    $errorReporting = 0;
     $displayErrorsParam = 0;
     $logErrorsParam     = 0;
 }
 
-true === $errorReportingAll ? error_reporting(E_ALL) :
-    error_reporting(E_ALL & ~E_NOTICE & ~E_DEPRECATED & ~E_STRICT & ~E_USER_NOTICE & ~E_USER_DEPRECATED);
-
+error_reporting($errorReporting);
 ini_set('display_errors', $displayErrorsParam);
 ini_set('log_errors', $logErrorsParam);
 
@@ -74,7 +69,6 @@ try {
     $application = new \Phalcon\Mvc\Application($di);
 
     echo str_replace(["\n","\r","\t"], '', $application->handle()->getContent());
-
 } catch (\Exception $e) {
     echo $e->getMessage() . '<br>';
     echo '<pre>' . $e->getTraceAsString() . '</pre>';

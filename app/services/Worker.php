@@ -40,7 +40,7 @@ class Worker
     }
 
     /**
-     * Serches for the first match between the accessKey and the password of admin type
+     * Searches for the first match between the accessKey and the password of admin type
      * workers from the database and if found, sets the worker's id in the session
      * @param string $accessKey
      * @return boolean
