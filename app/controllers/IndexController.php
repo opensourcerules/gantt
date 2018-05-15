@@ -9,9 +9,9 @@ class IndexController extends ControllerBase
     }
 
     /**
-     * Define the notFound404 action
+     * Define the notFound action
      */
-    public function notFound404Action()
+    public function notFoundAction()
     {
         $this->response->setStatusCode(404, "Not Found");
         $this->response->send();

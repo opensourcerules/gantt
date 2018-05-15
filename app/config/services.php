@@ -12,7 +12,7 @@ use GanttDashboard\App\Models\Workers;
 use GanttDashboard\App\Services\Worker as WorkerService;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Events\Manager;
-use Phalcon\Dispatcher as DispatcherConstants;
+use GanttDashboard\App\Plugins\NotFound;
 
 /**
  * Shared configuration service
@@ -172,32 +172,20 @@ $di->set('dispatcher', function () {
     $eventsManager = new Manager();
 
     /**
+     * Create not found exceptions
+     */
+    $notFoundExceptions = new NotFound();
+
+    /**
      * Attach a listener
      */
-    $eventsManager->attach('dispatch', function ($event, $dispatcher, $exception) {
+    $eventsManager->attach('dispatch:beforeException', $notFoundExceptions);
 
-        /**
-         * Dispatch to notFound404 action in case controller or action doesn't exist
-         */
-        if ($event->getType() == 'beforeException') {
-            switch ($exception->getCode()) {
-                case DispatcherConstants::EXCEPTION_HANDLER_NOT_FOUND:
-                case DispatcherConstants::EXCEPTION_INVALID_HANDLER:
-                case DispatcherConstants::EXCEPTION_ACTION_NOT_FOUND:
-                case DispatcherConstants::EXCEPTION_INVALID_PARAMS:
-                    $dispatcher->forward([
-                        'controller' => 'Index',
-                        'action' => 'notFound404'
-                    ]);
-
-                    return false;
-            }
-        }
-
-        return true;
-    });
-
+    /**
+     * Bind the EventsManager to the dispatcher
+     */
     $dispatcher->setEventsManager($eventsManager);
+
     $dispatcher->setDefaultNamespace(
         'GanttDashboard\\App\\Controllers'
     );

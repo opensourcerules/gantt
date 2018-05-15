@@ -8,22 +8,30 @@ $router = $di->getRouter();
 $router->addGet('/', [
     'controller' => 'Index',
     'action'     => 'index',
+])->setName('home');
+
+/**
+ * Add not found route
+ */
+$router->addGet('/', [
+    'controller' => 'Index',
+    'action'     => 'notFound',
+])->setName('notFound');
+
+/**
+ * Add not found for numeric controllers and actions
+ */
+$router->addGet('/([0-9]+)/([0-9]+)', [
+    'controller' => 'Index',
+    'action'     => 'notFound',
 ]);
 
 /**
- * Add worker route with login action
+ * Add not found for numeric controllers
  */
-$router->addGet('/worker/login', [
-    'controller' => 'Worker',
-    'action'     => 'login',
-]);
-
-/**
- * Add worker route with logout action
- */
-$router->addGet('/worker/logout', [
-    'controller' => 'Worker',
-    'action'     => 'logout',
+$router->addGet('/([0-9]+)', [
+    'controller' => 'Index',
+    'action'     => 'notFound',
 ]);
 
 $router->handle();

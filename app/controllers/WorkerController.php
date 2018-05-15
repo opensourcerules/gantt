@@ -25,15 +25,16 @@ class WorkerController extends ControllerBase
      */
     public function loginAction(string $accessKey = '')
     {
-        $redirect = 'index/notFound404';
-        $success = $this->workerService->login($accessKey);
+        $redirect = ['for' => 'notFound'];
+        $redirectCode = 404;
 
-        if (true === $success) {
+        if (true === $this->workerService->login($accessKey)) {
             $this->flashSession->success('You are now logged in as ADMIN!');
-            $redirect = '';
+            $redirect = ['for' => 'home'];
+            $redirectCode = 200;
         }
 
-        $this->response->redirect($redirect);
+        $this->response->redirect($redirect, false, $redirectCode);
     }
 
     /**
@@ -43,6 +44,6 @@ class WorkerController extends ControllerBase
     {
         $this->workerService->logout();
         $this->flashSession->success('You are now logged out!');
-        $this->response->redirect('');
+        $this->response->redirect(['for' => 'home'], false, 200);
     }
 }

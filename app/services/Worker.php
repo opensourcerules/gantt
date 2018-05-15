@@ -3,13 +3,13 @@
 namespace GanttDashboard\App\Services;
 
 use GanttDashboard\App\Models\Workers;
-use Phalcon\Session\Adapter\Files;
+use Phalcon\Session\Adapter\Files as SessionAdapter;
 use Phalcon\Security;
 
 class Worker
 {
     /**
-     * @var Files
+     * @var SessionAdapter
      */
     private $sessionService;
 
@@ -24,13 +24,13 @@ class Worker
     private $workerModel;
 
     /**
-     * Worker constructor.
-     * @param Files $sessionService
+     * Constructs the needed services, set in DI, for session, security and model
+     * @param SessionAdapter $sessionService
      * @param Security $securityService
      * @param Workers $workerModel
      */
     public function __construct(
-        Files $sessionService,
+        SessionAdapter $sessionService,
         Security $securityService,
         Workers $workerModel
     ) {
@@ -40,6 +40,8 @@ class Worker
     }
 
     /**
+     * Serches for the first match between the accessKey and the password of admin type
+     * workers from the database and if found, sets the worker's id in the session
      * @param string $accessKey
      * @return boolean
      */
