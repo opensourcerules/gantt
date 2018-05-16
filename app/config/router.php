@@ -11,6 +11,14 @@ $router->addGet('/', [
 ])->setName('home');
 
 /**
+ * Add not found route
+ */
+$router->addGet('/index/notFound', [
+    'controller' => 'Index',
+    'action'     => 'notFound',
+])->setName('notFound');
+
+/**
  * Add not found for numeric controllers and actions
  */
 $router->addGet('/([0-9]+)/([0-9]+)', [

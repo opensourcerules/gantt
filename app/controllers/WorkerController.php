@@ -28,18 +28,13 @@ class WorkerController extends ControllerBase
      */
     public function loginAction(string $accessKey = '')
     {
-        if (true === $this->workerService->login($accessKey)) {
-            $this->flashSession->success('You are now logged in as ADMIN!');
-
-            return $this->response->redirect(['for' => 'home'], false, 200);
+        if (false === $this->workerService->login($accessKey)) {
+            return $this->response->redirect(['for' => 'notFound'], false, 404);
         }
 
-        $this->dispatcher->forward([
-            'controller' => 'Index',
-            'action'     => 'notFound',
-        ]);
+        $this->flashSession->success('You are now logged in as ADMIN!');
 
-        return $this->response->setStatusCode(404, 'Not Found');
+        return $this->response->redirect(['for' => 'home'], false, 200);
     }
 
     /**

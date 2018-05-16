@@ -19,18 +19,18 @@ if (false === in_array($environment, ['testing', 'production', 'development'])) 
 }
 
 $errorReporting = E_ALL;
-$displayErrorsParam  = 1;
-$logErrorsParam      = 1;
+$iniDisplayErrors  = 1;
+$iniLogErrors      = 1;
 
 if ($environment !== 'development') {
     $errorReporting = 0;
-    $displayErrorsParam = 0;
-    $logErrorsParam     = 0;
+    $iniDisplayErrors = 0;
+    $iniLogErrors     = 0;
 }
 
 error_reporting($errorReporting);
-ini_set('display_errors', $displayErrorsParam);
-ini_set('log_errors', $logErrorsParam);
+ini_set('display_errors', $iniDisplayErrors);
+ini_set('log_errors', $iniLogErrors);
 
 define('BASE_PATH', dirname(__DIR__));
 define('APP_PATH', BASE_PATH . '/app');
