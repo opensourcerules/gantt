@@ -1,9 +1,19 @@
 <?php
 
+namespace GanttDashboard\App\Controllers;
+
 class IndexController extends ControllerBase
 {
     public function indexAction()
     {
-        $this->session->set('worker_session', 1);
+    }
+
+    /**
+     * Define the notFound action
+     */
+    public function notFoundAction()
+    {
+        $this->response->setStatusCode(404, "Not Found");
+        $this->response->send();
     }
 }

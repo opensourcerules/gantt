@@ -75,6 +75,14 @@ class WorkersMigration_100 extends Migration
                             'size' => 255,
                             'after' => 'email'
                         ]
+                    ),
+                    new Column(
+                        'admin',
+                        [
+                            'type' => Column::TYPE_BOOLEAN,
+                            'default' => 0,
+                            'after' => 'password'
+                        ]
                     )
                 ],
                 'indexes' => [

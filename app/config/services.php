@@ -5,13 +5,20 @@ use Phalcon\Mvc\Url as UrlResolver;
 use Phalcon\Mvc\View\Engine\Volt as VoltEngine;
 use Phalcon\Mvc\Model\Metadata\Memory as MetaDataAdapter;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
-use Phalcon\Flash\Direct as Flash;
+use Phalcon\Flash\Direct as FlashDirect;
+use Phalcon\Flash\Session as FlashSession;
+use Phalcon\Security;
+use GanttDashboard\App\Models\Workers;
+use GanttDashboard\App\Services\Worker as WorkerService;
+use Phalcon\Mvc\Dispatcher;
+use Phalcon\Events\Manager;
+use GanttDashboard\App\Plugins\NotFound;
 
 /**
  * Shared configuration service
  */
 $di->setShared('config', function () {
-    return include APP_PATH . "/config/config.php";
+    return include APP_PATH . '/config/config.php';
 });
 
 /**
@@ -29,21 +36,18 @@ $di->setShared('url', function () {
 /**
  * Register Volt as a service
  */
-$di->set(
-    'voltService',
-    function ($view) {
-        $config = $this->getConfig();
+$di->set('voltService', function ($view) {
+    $config = $this->getConfig();
 
-        $volt = new VoltEngine($view, $this);
+    $volt = new VoltEngine($view, $this);
 
-        $volt->setOptions([
-            'compiledPath' => $config->application->cacheDir,
-            'compiledSeparator' => '_'
-        ]);
+    $volt->setOptions([
+        'compiledPath' => $config->application->cacheDir,
+        'compiledSeparator' => '_'
+    ]);
 
-        return $volt;
-    }
-);
+    return $volt;
+});
 
 /**
  * Setting up the view component
@@ -87,19 +91,28 @@ $di->setShared('db', function () {
     return $connection;
 });
 
-
 /**
  * If the configuration specify the use of metadata adapter use it or use memory otherwise
  */
-$di->setShared('modelsMetadata', function () {
-    return new MetaDataAdapter();
+$di->setShared(MetaDataAdapter::class, MetaDataAdapter::class);
+
+/**
+ * Register the flash service with the Twitter Bootstrap classes
+ */
+$di->setShared('flash', function () {
+    return new FlashDirect([
+        'error'   => 'alert alert-danger',
+        'success' => 'alert alert-success',
+        'notice'  => 'alert alert-info',
+        'warning' => 'alert alert-warning'
+    ]);
 });
 
 /**
  * Register the session flash service with the Twitter Bootstrap classes
  */
-$di->set('flash', function () {
-    return new Flash([
+$di->setShared('flashSession', function () {
+    return new FlashSession([
         'error'   => 'alert alert-danger',
         'success' => 'alert alert-success',
         'notice'  => 'alert alert-info',
@@ -115,4 +128,67 @@ $di->setShared('session', function () {
     $session->start();
 
     return $session;
+});
+
+/**
+ * Register security services
+ */
+$di->setShared('security', function () {
+    $security = new Security();
+
+    /**
+     * Set the password hashing factor to 12 rounds
+     */
+    $security->setWorkFactor(12);
+
+    return $security;
+});
+
+/**
+ * Register Workers model
+ */
+$di->setShared(Workers::class, Workers::class);
+
+/**
+ * Register Worker service
+ */
+$di->setShared(WorkerService::class, function () {
+        return new WorkerService(
+            $this->get('session'),
+            $this->get('security'),
+            $this->get(Workers::class)
+        );
+});
+
+/**
+ * Register a dispatcher
+ */
+$di->set('dispatcher', function () {
+    $dispatcher = new Dispatcher();
+
+    /**
+     * Create an EventManager
+     */
+    $eventsManager = new Manager();
+
+    /**
+     * Create not found exceptions
+     */
+    $notFoundExceptions = new NotFound();
+
+    /**
+     * Attach a listener
+     */
+    $eventsManager->attach('dispatch:beforeException', $notFoundExceptions);
+
+    /**
+     * Bind the EventsManager to the dispatcher
+     */
+    $dispatcher->setEventsManager($eventsManager);
+
+    $dispatcher->setDefaultNamespace(
+        'GanttDashboard\\App\\Controllers'
+    );
+
+    return $dispatcher;
 });
