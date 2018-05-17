@@ -2,23 +2,41 @@
 
 namespace GanttDashboard\App\Controllers;
 
+use GanttDashboard\App\Validators\Traits;
+use GanttDashboard\App\Validators\Worker as WorkerValidator;
+use GanttDashboard\App\Models\Workers as WorkerModel;
 use GanttDashboard\App\Services\Worker as WorkerService;
 use Phalcon\Http\Response;
 use Phalcon\Http\ResponseInterface;
 
 class WorkerController extends ControllerBase
 {
+    use Traits;
+
     /**
      * @var WorkerService
      */
     private $workerService;
 
     /**
-     * Initialises the workerService property
+     * @var WorkerValidator
+     */
+    private $workerValidator;
+
+    /**
+     * @var WorkerModel
+     */
+    private $workerModel;
+
+    /**
+     * Initialises the workerService, workerValidator and workerModel properties
      */
     public function onConstruct()
     {
-        $this->workerService = $this->getDi()->get(WorkerService::class);
+        $getDI                 = $this->getDi();
+        $this->workerService   = $getDI->get(WorkerService::class);
+        $this->workerValidator = $getDI->get(WorkerValidator::class);
+        $this->workerModel     = $getDI->get(WorkerModel::class);
     }
 
     /**
@@ -47,5 +65,32 @@ class WorkerController extends ControllerBase
         $this->flashSession->success('You are now logged out!');
 
         return $this->response->redirect(['for' => 'home'], false, 200);
+    }
+
+    /**
+     * If Admin is logged in, registers new worker by calling validation and if ok,
+     * calls Workers model's register method
+     */
+    public function registerAction()
+    {
+        if (false === $this->workerService->isLoggedIn()) {
+            $this->response->redirect(['for' => 'home'], false, 403);
+        }
+
+        if (null !== $this->request->getPost('submit')) {
+            $worker = $this->request->getPost();
+            $messages = $this->workerValidator->validate($worker);
+
+            if (0 === $messages->count()) {
+                $worker['password'] = $this->workerService->hashPassword($worker['password']);
+
+                if (true === $this->workerModel->register($worker)) {
+                    $this->flashSession->success('Worker registration successful');
+                    $this->response->redirect(['for' => 'registerWorker'], false, 200);
+                }
+            }
+
+            $this->view->notices = $this->buildNoticesForView($messages);
+        }
     }
 }

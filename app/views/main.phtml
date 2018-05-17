@@ -10,10 +10,10 @@
 </head>
 <body>
     <div class="container-fluid">
-        {{ partial("partials/menu") }}
+        {{ partial('partials/menu') }}
 
         {%if true === session.has('worker_session') %}
-            {{ partial("partials/adminmenu") }}
+            {{ partial('partials/adminmenu') }}
         {% endif %}
         <hr />
     </div>
@@ -34,6 +34,8 @@
     {{ javascript_include('https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js') }}
     <!-- Latest compiled and minified JavaScript -->
     {{ javascript_include('https://maxcdn.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js') }}
+    <!--Include main js file-->
+    {{ javascript_include('js\main.js') }}
 
 </body>
 </html>

@@ -1,0 +1,91 @@
+<h3>Register worker</h3>
+
+{{ form('worker/register', 'method': 'post') }}
+<fieldset>
+    <div class='form-group'>
+        <label for='lastName'>Last name</label>
+        <div class='row justify-content-center'>
+            <div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>
+                {% if notices['lastName'] is defined %}
+                    <div class='text-danger'>
+                        {{ notices['lastName'] }}
+                    </div>
+                {% endif %}
+                <div class='controls'>
+                    {{ text_field('lastName', 'class': 'form-control') }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class='form-group'>
+        <label for='firstName'>First name</label>
+        <div class='row justify-content-center'>
+            <div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>
+                {% if notices['firstName'] is defined %}
+                    <div class='text-danger'>
+                        {{ notices['firstName'] }}
+                    </div>
+                {% endif %}
+                <div class='controls'>
+                    {{ text_field('firstName', 'class': 'form-control') }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class='form-group'>
+        <label for='email'>Email</label>
+        <div class='row justify-content-center'>
+            <div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>
+                {% if notices['email'] is defined %}
+                    <div class='text-danger'>
+                        {{ notices['email'] }}
+                    </div>
+                {% endif %}
+                <div class='controls'>
+                    {{ text_field('email', 'class': 'form-control') }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class='form-group'>
+        <label for='admin'>Type</label>
+        <div class='row justify-content-center'>
+            <div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>
+                <div class='controls'>
+                {{ select(
+                    'admin',
+                    ['1': 'Admin'],
+                    'onchange': 'togglePasswordDisplay(this.value)',
+                    'class': 'form-control',
+                    'useEmpty': 'true',
+                    'emptyText' : 'Worker',
+                    'emptyValue' : '0'
+                )}}
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <div class='form-group' id='pass'>
+        <label for='password'>Password</label>
+        <div class='row justify-content-center'>
+            <div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>
+                {% if notices['password'] is defined %}
+                <div class='text-danger'>
+                        {{ notices['password'] }}
+                    </div>
+                {% endif %}
+                <div class='controls'>
+                    {{ password_field('password', 'class': 'form-control') }}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class='form-group'>
+        {{ submit_button('Register worker', 'class': 'btn btn-primary btn-large', 'name': 'submit') }}
+    </div>
+</fieldset>
+{{  endform() }}

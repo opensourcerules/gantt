@@ -9,7 +9,8 @@ $loader->registerDirs([
     $config->application->controllersDir,
     $config->application->modelsDir,
     $config->application->servicesDir,
-    $config->application->pluginsDir
+    $config->application->pluginsDir,
+    $config->application->validatorsDir
 ]);
 
 /**
@@ -19,7 +20,8 @@ $loader->registerNamespaces([
     'GanttDashboard\\App\\Controllers' => $config->application->controllersDir,
     'GanttDashboard\\App\\Models'      => $config->application->modelsDir,
     'GanttDashboard\\App\\Services'    => $config->application->servicesDir,
-    'GanttDashboard\\App\\Plugins'     => $config->application->pluginsDir
+    'GanttDashboard\\App\\Plugins'     => $config->application->pluginsDir,
+    'GanttDashboard\\App\\Validators'  => $config->application->validatorsDir
 ]);
 
 $loader->register();

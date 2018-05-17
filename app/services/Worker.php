@@ -69,4 +69,29 @@ class Worker
     {
         $this->sessionService->remove('worker_session');
     }
+
+    /**
+     *Checks if worker is logged in
+     * @return boolean
+     */
+    public function isLoggedIn()
+    {
+        $admin = $this->sessionService->get('worker_session');
+
+        if (false === empty($admin)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Hashes password
+     * @param string $password
+     * @return string
+     */
+    public function hashPassword(string $password)
+    {
+        return $this->securityService->hash($password);
+    }
 }

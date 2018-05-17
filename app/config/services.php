@@ -13,6 +13,7 @@ use GanttDashboard\App\Services\Worker as WorkerService;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Events\Manager;
 use GanttDashboard\App\Plugins\NotFound;
+use GanttDashboard\App\Validators\Worker as WorkerValidator;
 
 /**
  * Shared configuration service
@@ -148,6 +149,15 @@ $di->setShared('security', function () {
  * Register Workers model
  */
 $di->setShared(Workers::class, Workers::class);
+
+/**
+ * Register Worker Validator
+ */
+$di->setShared(WorkerValidator::class, function () {
+    return new WorkerValidator(
+        $this->get(Workers::class)
+    );
+});
 
 /**
  * Register Worker service

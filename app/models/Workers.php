@@ -192,4 +192,20 @@ class Workers extends Model
             'admin' => 'admin'
         ];
     }
+
+    /**
+     *Registers new worker into db
+     * @var array $worker
+     * @return bool
+     */
+    public function register(array $worker)
+    {
+        $this->setLastName($worker['lastName']);
+        $this->setFirstName($worker['firstName']);
+        $this->setEmail($worker['email']);
+        $this->setPassword($worker['password']);
+        $this->setAdmin($worker['admin']);
+
+        return $this->create();
+    }
 }
