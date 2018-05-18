@@ -2,68 +2,38 @@
 
 namespace GanttDashboard\App\Services;
 
-use GanttDashboard\App\Models\Workers;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
-use Phalcon\Security;
-use Phalcon\Mvc\Model\Resultset\Simple as ResultSetSimple;
 
 class Authentication
 {
+    const ACCESS_KEY = 'kanban';
+
     /**
      * @var SessionAdapter
      */
     private $sessionService;
 
     /**
-     * @var Security
-     */
-    private $securityService;
-
-    /**
-     * @var Worker
-     */
-    private $workerModel;
-
-    /**
-     * Constructs the needed services, set in DI, for session, security and model
+     * Constructs the needed services, set in DI, for session service
      * @param SessionAdapter $sessionService
-     * @param Security $securityService
-     * @param Workers $workerModel
      */
     public function __construct(
-        SessionAdapter $sessionService,
-        Security $securityService,
-        Workers $workerModel
+        SessionAdapter $sessionService
     ) {
         $this->sessionService = $sessionService;
-        $this->securityService = $securityService;
-        $this->workerModel = $workerModel;
     }
 
     /**
-     * Searches for the first match between the accessKey and the password of admin type
-     * workers from the database and if found, sets the worker's id in the session
+     * If access_key matches, sets a session field
      * @param string $accessKey
      * @return bool
      */
     public function login(string $accessKey): bool
     {
-        /**
-         * @var ResultSetSimple $admins
-         */
-        $admins = $this->workerModel->find([
-            'admin = 1',
-        ]);
+        if (self::ACCESS_KEY === $accessKey) {
+            $this->sessionService->set('admin', 1);
 
-        /**
-         * @var Workers $admin
-         */
-        foreach ($admins as $admin) {
-            if (true === $this->securityService->checkHash($accessKey, $admin->getPassword())) {
-                $this->sessionService->set('worker_session', $admin->getId());
-
-                return true;
-            }
+            return true;
         }
 
         return false;
@@ -75,7 +45,7 @@ class Authentication
      */
     public function logout(): void
     {
-        $this->sessionService->remove('worker_session');
+        $this->sessionService->remove('admin');
     }
 
     /**
@@ -84,22 +54,10 @@ class Authentication
      */
     public function isLoggedIn(): bool
     {
-        $admin = $this->sessionService->get('worker_session');
-
-        if (false === empty($admin)) {
+        if (null !== $this->sessionService->get('admin')) {
             return true;
         }
 
         return false;
-    }
-
-    /**
-     * Hashes password
-     * @param string $password
-     * @return string
-     */
-    public function hashPassword(string $password): string
-    {
-        return $this->securityService->hash($password);
     }
 }

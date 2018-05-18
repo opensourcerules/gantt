@@ -7,7 +7,6 @@ use Phalcon\Mvc\Model\Metadata\Memory as MetaDataAdapter;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
 use Phalcon\Flash\Direct as FlashDirect;
 use Phalcon\Flash\Session as FlashSession;
-use Phalcon\Security;
 use GanttDashboard\App\Models\Workers;
 use GanttDashboard\App\Services\Authentication as AuthenticationService;
 use GanttDashboard\App\Services\Worker as WorkerService;
@@ -133,20 +132,6 @@ $di->setShared('session', function () {
 });
 
 /**
- * Register security services
- */
-$di->setShared('security', function () {
-    $security = new Security();
-
-    /**
-     * Set the password hashing factor to 12 rounds
-     */
-    $security->setWorkFactor(12);
-
-    return $security;
-});
-
-/**
  * Register Worker model
  */
 $di->setShared(Workers::class, Workers::class);
@@ -165,9 +150,7 @@ $di->setShared(WorkerValidator::class, function () {
  */
 $di->setShared(AuthenticationService::class, function () {
         return new AuthenticationService(
-            $this->get('session'),
-            $this->get('security'),
-            $this->get(Workers::class)
+            $this->get('session')
         );
 });
 
@@ -177,7 +160,6 @@ $di->setShared(AuthenticationService::class, function () {
 $di->setShared(WorkerService::class, function () {
     return new WorkerService(
         $this->get(WorkerValidator::class),
-        $this->get(AuthenticationService::class),
         $this->get(Workers::class)
     );
 });

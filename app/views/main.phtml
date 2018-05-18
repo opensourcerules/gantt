@@ -12,7 +12,7 @@
     <div class="container-fluid">
         {{ partial('partials/menu') }}
 
-        {%if true === session.has('worker_session') %}
+        {%if true === session.has('admin') %}
             {{ partial('partials/adminmenu') }}
         {% endif %}
         <hr />

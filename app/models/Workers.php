@@ -37,20 +37,6 @@ class Workers extends Model
     protected $email;
 
     /**
-     *
-     * @var string
-     * @Column(column="password", type="string", length=255, nullable=true)
-     */
-    protected $password;
-
-    /**
-     *
-     * @var bool
-     * @Column(column="admin", type="boolean", default=false)
-     */
-    protected $admin;
-
-    /**
      * Method to set the value of field lastName
      *
      * @param string $lastName
@@ -85,32 +71,6 @@ class Workers extends Model
     public function setEmail($email): object
     {
         $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field password
-     *
-     * @param string $password
-     * @return $this
-     */
-    public function setPassword($password): object
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field admin
-     *
-     * @param bool $admin
-     * @return $this
-     */
-    public function setAdmin($admin): object
-    {
-        $this->admin = $admin;
 
         return $this;
     }
@@ -156,26 +116,6 @@ class Workers extends Model
     }
 
     /**
-     * Returns the value of field password
-     *
-     * @return string
-     */
-    public function getPassword(): ?string
-    {
-        return $this->password;
-    }
-
-    /**
-     * Returns the value of field admin
-     *
-     * @return bool
-     */
-    public function getAdmin(): bool
-    {
-        return $this->admin;
-    }
-
-    /**
      * Independent Column Mapping.
      * Keys are the real names in the table and the values their names in the application
      *
@@ -187,9 +127,7 @@ class Workers extends Model
             'id' => 'id',
             'last_name' => 'lastName',
             'first_name' => 'firstName',
-            'email' => 'email',
-            'password' => 'password',
-            'admin' => 'admin'
+            'email' => 'email'
         ];
     }
 }

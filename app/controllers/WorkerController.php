@@ -3,11 +3,8 @@
 namespace GanttDashboard\App\Controllers;
 
 use Phalcon\Mvc\Controller;
-use GanttDashboard\App\Models\Workers as WorkerModel;
 use GanttDashboard\App\Services\Authentication as AuthenticationService;
 use GanttDashboard\App\Services\Worker as WorkerService;
-use Phalcon\Http\Response;
-use Phalcon\Http\ResponseInterface;
 
 class WorkerController extends Controller
 {
@@ -22,11 +19,6 @@ class WorkerController extends Controller
     private $authenticationService;
 
     /**
-     * @var WorkerModel
-     */
-    private $workerModel;
-
-    /**
      * Initializes the worker service, authentication service and worker model properties
      * @return void
      */
@@ -35,13 +27,12 @@ class WorkerController extends Controller
         $getDI                         = $this->getDi();
         $this->workerService           = $getDI->get(WorkerService::class);
         $this->authenticationService   = $getDI->get(AuthenticationService::class);
-        $this->workerModel             = $getDI->get(WorkerModel::class);
     }
 
     /**
      * Performs the login
      * @param string $accessKey
-     * @return Response|ResponseInterface
+     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface
      */
     public function loginAction(string $accessKey = ''): object
     {
@@ -59,7 +50,7 @@ class WorkerController extends Controller
 
     /**
      * Performs the logout
-     * @return Response|ResponseInterface
+     * @return \Phalcon\Http\Response|\Phalcon\Http\ResponseInterface
      */
     public function logoutAction(): object
     {
@@ -85,7 +76,7 @@ class WorkerController extends Controller
         /**
          * If submit
          */
-        if (false === empty($worker)) {
+        if (count($worker) > 0) {
             $errors = $this->workerService->register($worker);
 
             if (0 == $errors->count()) {
