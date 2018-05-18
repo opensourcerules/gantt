@@ -6,9 +6,9 @@
         <label for='lastName'>Last name</label>
         <div class='row justify-content-center'>
             <div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>
-                {% if errors['lastName'] is defined %}
+                {% if errors is defined and errors.filter('lastName')|length > 0 %}
                     <div class='text-danger'>
-                        {{ errors['lastName'] }}
+                        {{ errors.filter('lastName')[0].getMessage() }}
                     </div>
                 {% endif %}
                 <div class='controls'>
@@ -22,9 +22,9 @@
         <label for='firstName'>First name</label>
         <div class='row justify-content-center'>
             <div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>
-                {% if errors['firstName'] is defined %}
+                {% if errors is defined and  errors.filter('firstName')|length > 0 %}
                     <div class='text-danger'>
-                        {{ errors['firstName'] }}
+                        {{ errors.filter('firstName')[0].getMessage() }}
                     </div>
                 {% endif %}
                 <div class='controls'>
@@ -38,9 +38,9 @@
         <label for='email'>Email</label>
         <div class='row justify-content-center'>
             <div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>
-                {% if errors['email'] is defined %}
+                {% if errors is defined and  errors.filter('email')|length > 0 %}
                     <div class='text-danger'>
-                        {{ errors['email'] }}
+                        {{ errors.filter('email')[0].getMessage() }}
                     </div>
                 {% endif %}
                 <div class='controls'>
@@ -73,9 +73,9 @@
         <label for='password'>Password</label>
         <div class='row justify-content-center'>
             <div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>
-                {% if errors['password'] is defined %}
-                <div class='text-danger'>
-                        {{ errors['password'] }}
+                {% if errors is defined and  errors.filter('password')|length > 0 %}
+                    <div class='text-danger'>
+                        {{ errors.filter('password')[0].getMessage() }}
                     </div>
                 {% endif %}
                 <div class='controls'>

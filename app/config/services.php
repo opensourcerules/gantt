@@ -176,6 +176,7 @@ $di->setShared(AuthenticationService::class, function () {
  */
 $di->setShared(WorkerService::class, function () {
     return new WorkerService(
+        $this->get(WorkerValidator::class),
         $this->get(AuthenticationService::class),
         $this->get(Workers::class)
     );

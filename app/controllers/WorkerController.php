@@ -2,14 +2,14 @@
 
 namespace GanttDashboard\App\Controllers;
 
-use GanttDashboard\App\Validators\Worker as WorkerValidator;
+use Phalcon\Mvc\Controller;
 use GanttDashboard\App\Models\Workers as WorkerModel;
 use GanttDashboard\App\Services\Authentication as AuthenticationService;
 use GanttDashboard\App\Services\Worker as WorkerService;
 use Phalcon\Http\Response;
 use Phalcon\Http\ResponseInterface;
 
-class WorkerController extends ControllerBase
+class WorkerController extends Controller
 {
     /**
      * @var WorkerService
@@ -22,26 +22,20 @@ class WorkerController extends ControllerBase
     private $authenticationService;
 
     /**
-     * @var WorkerValidator
-     */
-    private $workerValidator;
-
-    /**
      * @var WorkerModel
      */
     private $workerModel;
 
     /**
-     * Initialises the workerService, workerValidator and workerModel properties
+     * Initializes the worker service, authentication service and worker model properties
      * @return void
      */
     public function onConstruct(): void
     {
-        $getDI                 = $this->getDi();
-        $this->workerService   = $getDI->get(WorkerService::class);
+        $getDI                         = $this->getDi();
+        $this->workerService           = $getDI->get(WorkerService::class);
         $this->authenticationService   = $getDI->get(AuthenticationService::class);
-        $this->workerValidator = $getDI->get(WorkerValidator::class);
-        $this->workerModel     = $getDI->get(WorkerModel::class);
+        $this->workerModel             = $getDI->get(WorkerModel::class);
     }
 
     /**
@@ -52,12 +46,15 @@ class WorkerController extends ControllerBase
     public function loginAction(string $accessKey = ''): object
     {
         if (false === $this->authenticationService->login($accessKey)) {
-            return $this->redirectTo(['for' => 'notFound'], 404);
+            $this->view->disable();
+
+            return $this->response->redirect(['for' => 'notFound'], false, 404);
         }
 
         $this->flashSession->success('You are now logged in as ADMIN!');
+        $this->view->disable();
 
-        return $this->redirectTo(['for' => 'home']);
+        return $this->response->redirect(['for' => 'home']);
     }
 
     /**
@@ -68,8 +65,9 @@ class WorkerController extends ControllerBase
     {
         $this->authenticationService->logout();
         $this->flashSession->success('You are now logged out!');
+        $this->view->disable();
 
-        return $this->redirectTo(['for' => 'home']);
+        return $this->response->redirect(['for' => 'home']);
     }
 
     /**
@@ -78,17 +76,22 @@ class WorkerController extends ControllerBase
     public function registerAction(): void
     {
         if (false === $this->authenticationService->isLoggedIn()) {
-            $this->redirectTo(['for' => 'home'], 403);
+            $this->view->disable();
+            $this->response->redirect(['for' => 'home']);
         }
 
         $worker = $this->request->getPost();
 
+        /**
+         * If submit
+         */
         if (false === empty($worker)) {
-            $errors = $this->workerValidator->validation($worker);
+            $errors = $this->workerService->register($worker);
 
-            if (0 === count($errors) && true === $this->workerService->register($worker)) {
+            if (0 == $errors->count()) {
                 $this->flashSession->success('Worker registration successful');
-                $this->redirectTo(['for' => 'registerWorker']);
+                $this->view->disable();
+                $this->response->redirect(['for' => 'registerWorker']);
             }
 
             $this->view->errors = $errors;
