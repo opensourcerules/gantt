@@ -2,7 +2,6 @@
 
 namespace GanttDashboard\App\Validators;
 
-use Phalcon\Validation;
 use Phalcon\Validation\Validator\Email;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Uniqueness;
@@ -10,10 +9,10 @@ use Phalcon\Validation\Validator\Callback;
 use Phalcon\Validation\Validator\StringLength;
 use GanttDashboard\App\Models\Workers;
 
-class Worker extends Validation
+class Worker extends Base
 {
     /**
-     * Constructs the needed services, set in DI, for model
+     * Constructs the validations for model
      * @param Workers $workerModel
      */
     public function __construct(Workers $workerModel)
@@ -80,5 +79,15 @@ class Worker extends Validation
                     }
             ])
         );
+    }
+
+    /**
+     * Calls for validation on $worker
+     * @param array $worker
+     * @return array
+     */
+    public function validation(array $worker) : array
+    {
+        return $this->buildErrorsForView($this->validate($worker));
     }
 }

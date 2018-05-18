@@ -6,9 +6,9 @@
         <label for='lastName'>Last name</label>
         <div class='row justify-content-center'>
             <div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>
-                {% if notices['lastName'] is defined %}
+                {% if errors['lastName'] is defined %}
                     <div class='text-danger'>
-                        {{ notices['lastName'] }}
+                        {{ errors['lastName'] }}
                     </div>
                 {% endif %}
                 <div class='controls'>
@@ -22,9 +22,9 @@
         <label for='firstName'>First name</label>
         <div class='row justify-content-center'>
             <div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>
-                {% if notices['firstName'] is defined %}
+                {% if errors['firstName'] is defined %}
                     <div class='text-danger'>
-                        {{ notices['firstName'] }}
+                        {{ errors['firstName'] }}
                     </div>
                 {% endif %}
                 <div class='controls'>
@@ -38,9 +38,9 @@
         <label for='email'>Email</label>
         <div class='row justify-content-center'>
             <div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>
-                {% if notices['email'] is defined %}
+                {% if errors['email'] is defined %}
                     <div class='text-danger'>
-                        {{ notices['email'] }}
+                        {{ errors['email'] }}
                     </div>
                 {% endif %}
                 <div class='controls'>
@@ -73,9 +73,9 @@
         <label for='password'>Password</label>
         <div class='row justify-content-center'>
             <div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>
-                {% if notices['password'] is defined %}
+                {% if errors['password'] is defined %}
                 <div class='text-danger'>
-                        {{ notices['password'] }}
+                        {{ errors['password'] }}
                     </div>
                 {% endif %}
                 <div class='controls'>
@@ -89,3 +89,6 @@
     </div>
 </fieldset>
 {{  endform() }}
+
+<!--Include main js file-->
+{{ javascript_include('js/register_worker.js') }}

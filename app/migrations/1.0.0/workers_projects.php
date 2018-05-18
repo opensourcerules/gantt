@@ -14,7 +14,7 @@ class WorkersProjectsMigration_100 extends Migration
      *
      * @return void
      */
-    public function morph()
+    public function morph() : void
     {
     }
 
@@ -24,7 +24,7 @@ class WorkersProjectsMigration_100 extends Migration
      * @return void
      * @throws \Phalcon\Db\Exception
      */
-    public function up()
+    public function up() : void
     {
         $this->morphTable(
             'workers_projects',
@@ -69,7 +69,7 @@ class WorkersProjectsMigration_100 extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down() : void
     {
         self::$_connection->dropTable('workers_projects');
     }

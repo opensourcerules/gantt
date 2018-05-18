@@ -2,21 +2,24 @@
 
 namespace GanttDashboard\App\Controllers;
 
-use GanttDashboard\App\Validators\Traits;
 use GanttDashboard\App\Validators\Worker as WorkerValidator;
 use GanttDashboard\App\Models\Workers as WorkerModel;
+use GanttDashboard\App\Services\Authentication as AuthenticationService;
 use GanttDashboard\App\Services\Worker as WorkerService;
 use Phalcon\Http\Response;
 use Phalcon\Http\ResponseInterface;
 
 class WorkerController extends ControllerBase
 {
-    use Traits;
-
     /**
      * @var WorkerService
      */
     private $workerService;
+
+    /**
+     * @var AuthenticationService
+     */
+    private $authenticationService;
 
     /**
      * @var WorkerValidator
@@ -30,11 +33,13 @@ class WorkerController extends ControllerBase
 
     /**
      * Initialises the workerService, workerValidator and workerModel properties
+     * @return void
      */
-    public function onConstruct()
+    public function onConstruct() : void
     {
         $getDI                 = $this->getDi();
         $this->workerService   = $getDI->get(WorkerService::class);
+        $this->authenticationService   = $getDI->get(AuthenticationService::class);
         $this->workerValidator = $getDI->get(WorkerValidator::class);
         $this->workerModel     = $getDI->get(WorkerModel::class);
     }
@@ -44,53 +49,37 @@ class WorkerController extends ControllerBase
      * @param string $accessKey
      * @return Response|ResponseInterface
      */
-    public function loginAction(string $accessKey = '')
+    public function loginAction(string $accessKey = '') : object
     {
-        if (false === $this->workerService->login($accessKey)) {
-            return $this->response->redirect(['for' => 'notFound'], false, 404);
+        if (false === $this->authenticationService->login($accessKey)) {
+            return $this->redirectTo(['for' => 'notFound'], 404);
         }
 
-        $this->flashSession->success('You are now logged in as ADMIN!');
-
-        return $this->response->redirect(['for' => 'home'], false, 200);
+        return $this->redirectTo(['for' => 'home']);
     }
 
     /**
      * Performs the logout
      * @return Response|ResponseInterface
      */
-    public function logoutAction()
+    public function logoutAction() : object
     {
-        $this->workerService->logout();
-        $this->flashSession->success('You are now logged out!');
+        $this->authenticationService->logout();
 
-        return $this->response->redirect(['for' => 'home'], false, 200);
+        return $this->redirectTo(['for' => 'home']);
     }
 
     /**
-     * If Admin is logged in, registers new worker by calling validation and if ok,
-     * calls Workers model's register method
+     * If admin is logged in, registers new worker.
      */
-    public function registerAction()
+    public function registerAction() : void
     {
-        if (false === $this->workerService->isLoggedIn()) {
-            $this->response->redirect(['for' => 'home'], false, 403);
+        if (false === $this->authenticationService->isLoggedIn()) {
+            $this->redirectTo(['for' => 'home'], 403);
         }
 
-        if (null !== $this->request->getPost('submit')) {
-            $worker = $this->request->getPost();
-            $messages = $this->workerValidator->validate($worker);
-
-            if (0 === $messages->count()) {
-                $worker['password'] = $this->workerService->hashPassword($worker['password']);
-
-                if (true === $this->workerModel->register($worker)) {
-                    $this->flashSession->success('Worker registration successful');
-                    $this->response->redirect(['for' => 'registerWorker'], false, 200);
-                }
-            }
-
-            $this->view->notices = $this->buildNoticesForView($messages);
+        if (true === $this->workerService->register($this->request->getPost())) {
+            $this->redirectTo(['for' => 'registerWorker']);
         }
     }
 }

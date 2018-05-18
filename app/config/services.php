@@ -9,6 +9,8 @@ use Phalcon\Flash\Direct as FlashDirect;
 use Phalcon\Flash\Session as FlashSession;
 use Phalcon\Security;
 use GanttDashboard\App\Models\Workers;
+use GanttDashboard\App\Services\Authentication as AuthenticationService;
+use GanttDashboard\App\Services\Base as BaseService;
 use GanttDashboard\App\Services\Worker as WorkerService;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Events\Manager;
@@ -146,7 +148,7 @@ $di->setShared('security', function () {
 });
 
 /**
- * Register Workers model
+ * Register Worker model
  */
 $di->setShared(Workers::class, Workers::class);
 
@@ -160,14 +162,29 @@ $di->setShared(WorkerValidator::class, function () {
 });
 
 /**
+ * Register Authentication service
+ */
+$di->setShared(AuthenticationService::class, function () {
+        return new AuthenticationService(
+            $this->get('session'),
+            $this->get('security'),
+            $this->get(Workers::class),
+            $this->get('flashSession'),
+            $this->get('view')
+        );
+});
+
+/**
  * Register Worker service
  */
 $di->setShared(WorkerService::class, function () {
-        return new WorkerService(
-            $this->get('session'),
-            $this->get('security'),
-            $this->get(Workers::class)
-        );
+    return new WorkerService(
+        $this->get(AuthenticationService::class),
+        $this->get(WorkerValidator::class),
+        $this->get(Workers::class),
+        $this->get('flashSession'),
+        $this->get('view')
+    );
 });
 
 /**

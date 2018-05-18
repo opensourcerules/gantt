@@ -3,20 +3,22 @@
 namespace GanttDashboard\App\Services;
 
 use GanttDashboard\App\Models\Workers;
-use Phalcon\Session\Adapter\Files as SessionAdapter;
-use Phalcon\Security;
+use GanttDashboard\App\Validators\Worker as WorkerValidator;
+use GanttDashboard\App\Services\Authentication as AuthenticationService;
+use Phalcon\Flash\Session as FlashSession;
+use Phalcon\Mvc\View;
 
-class Worker
+class Worker extends Base
 {
     /**
-     * @var SessionAdapter
+     * @var AuthenticationService
      */
-    private $sessionService;
+    private $authenticationService;
 
     /**
-     * @var Security
+     * @var WorkerValidator
      */
-    private $securityService;
+    private $workerValidator;
 
     /**
      * @var Workers
@@ -24,74 +26,60 @@ class Worker
     private $workerModel;
 
     /**
-     * Constructs the needed services, set in DI, for session, security and model
-     * @param SessionAdapter $sessionService
-     * @param Security $securityService
+     * Constructs the needed services, set in DI, for session, security, model,
+     * flashSession and view
+     * @param Authentication $authenticationService
+     * @param WorkerValidator $workerValidator
      * @param Workers $workerModel
+     * @param FlashSession $flashSession
+     * @param View $view
      */
     public function __construct(
-        SessionAdapter $sessionService,
-        Security $securityService,
-        Workers $workerModel
+        AuthenticationService $authenticationService,
+        WorkerValidator $workerValidator,
+        Workers $workerModel,
+        FlashSession $flashSession,
+        View $view
     ) {
-        $this->sessionService = $sessionService;
-        $this->securityService = $securityService;
+        parent::__construct($flashSession, $view);
+        $this->authenticationService = $authenticationService;
+        $this->workerValidator = $workerValidator;
         $this->workerModel = $workerModel;
     }
 
     /**
-     * Searches for the first match between the accessKey and the password of admin type
-     * workers from the database and if found, sets the worker's id in the session
-     * @param string $accessKey
-     * @return boolean
+     * If $worker array was submitted and validation is ok, registers the worker
+     * @param array $worker
+     * @return bool
      */
-    public function login(string $accessKey)
+    public function register(array $worker) : bool
     {
-        $admins = $this->workerModel->find([
-            'admin = 1',
-        ]);
+        if (true === empty($worker)) {
+            return false;
+        }
 
-        foreach ($admins as $admin) {
-            if (true === $this->securityService->checkHash($accessKey, $admin->getPassword())) {
-                $this->sessionService->set('worker_session', $admin->getId());
+        $errors = $this->workerValidator->validation($worker);
+        $this->view->errors = $errors;
 
-                return true;
+        if (0 === count($errors)) {
+            if ('1' === $worker['admin']) {
+                $worker['password'] = $this->authenticationService->hashPassword($worker['password']);
             }
+
+            $this->workerModel->setLastName($worker['lastName']);
+            $this->workerModel->setFirstName($worker['firstName']);
+            $this->workerModel->setEmail($worker['email']);
+            $this->workerModel->setPassword($worker['password']);
+            $this->workerModel->setAdmin($worker['admin']);
+            $created = $this->workerModel->create();
+
+            if (true === $created) {
+                $this->flashSession->success('Worker registration successful');
+            }
+
+            return $created;
         }
 
         return false;
-    }
-
-    /**
-     * Removes the session variable stored by login
-     */
-    public function logout()
-    {
-        $this->sessionService->remove('worker_session');
-    }
-
-    /**
-     *Checks if worker is logged in
-     * @return boolean
-     */
-    public function isLoggedIn()
-    {
-        $admin = $this->sessionService->get('worker_session');
-
-        if (false === empty($admin)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * Hashes password
-     * @param string $password
-     * @return string
-     */
-    public function hashPassword(string $password)
-    {
-        return $this->securityService->hash($password);
     }
 }

@@ -2,26 +2,28 @@
 
 namespace GanttDashboard\App\Validators;
 
+use Phalcon\Validation;
 use Phalcon\Validation\Message;
 use Phalcon\Validation\Message\Group;
 
-trait Traits
+class Base extends Validation
 {
     /**
+     * Builds array of errors for view, from object
      * @param Group $messages
      * @return array
      */
-    public function buildNoticesForView(Group $messages)
+    protected function buildErrorsForView(Group $messages) : array
     {
-        $notices = [];
+        $errors = [];
 
         /**
          * @var Message $message
          */
         foreach ($messages as $message) {
-            $notices[$message->getField()] = $message->getMessage();
+            $errors[$message->getField()] = $message->getMessage();
         }
 
-        return $notices;
+        return $errors;
     }
 }
