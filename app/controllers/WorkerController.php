@@ -55,6 +55,8 @@ class WorkerController extends ControllerBase
             return $this->redirectTo(['for' => 'notFound'], 404);
         }
 
+        $this->flashSession->success('You are now logged in as ADMIN!');
+
         return $this->redirectTo(['for' => 'home']);
     }
 
@@ -65,12 +67,13 @@ class WorkerController extends ControllerBase
     public function logoutAction(): object
     {
         $this->authenticationService->logout();
+        $this->flashSession->success('You are now logged out!');
 
         return $this->redirectTo(['for' => 'home']);
     }
 
     /**
-     * If admin is logged in, registers new worker.
+     * If admin is logged in, registers new worker via worker service.
      */
     public function registerAction(): void
     {
@@ -78,8 +81,17 @@ class WorkerController extends ControllerBase
             $this->redirectTo(['for' => 'home'], 403);
         }
 
-        if (true === $this->workerService->register($this->request->getPost())) {
-            $this->redirectTo(['for' => 'registerWorker']);
+        $worker = $this->request->getPost();
+
+        if (false === empty($worker)) {
+            $errors = $this->workerValidator->validation($worker);
+
+            if (0 === count($errors) && true === $this->workerService->register($worker)) {
+                $this->flashSession->success('Worker registration successful');
+                $this->redirectTo(['for' => 'registerWorker']);
+            }
+
+            $this->view->errors = $errors;
         }
     }
 }

@@ -5,11 +5,9 @@ namespace GanttDashboard\App\Services;
 use GanttDashboard\App\Models\Workers;
 use Phalcon\Session\Adapter\Files as SessionAdapter;
 use Phalcon\Security;
-use Phalcon\Flash\Session as FlashSession;
-use Phalcon\Mvc\View;
 use Phalcon\Mvc\Model\Resultset\Simple as ResultSetSimple;
 
-class Authentication extends Base
+class Authentication
 {
     /**
      * @var SessionAdapter
@@ -31,17 +29,12 @@ class Authentication extends Base
      * @param SessionAdapter $sessionService
      * @param Security $securityService
      * @param Workers $workerModel
-     * @param FlashSession $flashSession
-     * @param View $view
      */
     public function __construct(
         SessionAdapter $sessionService,
         Security $securityService,
-        Workers $workerModel,
-        FlashSession $flashSession,
-        View $view
+        Workers $workerModel
     ) {
-        parent::__construct($flashSession, $view);
         $this->sessionService = $sessionService;
         $this->securityService = $securityService;
         $this->workerModel = $workerModel;
@@ -68,7 +61,6 @@ class Authentication extends Base
         foreach ($admins as $admin) {
             if (true === $this->securityService->checkHash($accessKey, $admin->getPassword())) {
                 $this->sessionService->set('worker_session', $admin->getId());
-                $this->flashSession->success('You are now logged in as ADMIN!');
 
                 return true;
             }
@@ -84,7 +76,6 @@ class Authentication extends Base
     public function logout(): void
     {
         $this->sessionService->remove('worker_session');
-        $this->flashSession->success('You are now logged out!');
     }
 
     /**

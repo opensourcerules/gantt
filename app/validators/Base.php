@@ -6,7 +6,7 @@ use Phalcon\Validation;
 use Phalcon\Validation\Message;
 use Phalcon\Validation\Message\Group;
 
-class Base extends Validation
+abstract class Base extends Validation
 {
     /**
      * Builds array of errors for view, from object

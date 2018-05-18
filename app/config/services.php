@@ -167,9 +167,7 @@ $di->setShared(AuthenticationService::class, function () {
         return new AuthenticationService(
             $this->get('session'),
             $this->get('security'),
-            $this->get(Workers::class),
-            $this->get('flashSession'),
-            $this->get('view')
+            $this->get(Workers::class)
         );
 });
 
@@ -179,10 +177,7 @@ $di->setShared(AuthenticationService::class, function () {
 $di->setShared(WorkerService::class, function () {
     return new WorkerService(
         $this->get(AuthenticationService::class),
-        $this->get(WorkerValidator::class),
-        $this->get(Workers::class),
-        $this->get('flashSession'),
-        $this->get('view')
+        $this->get(Workers::class)
     );
 });
 
