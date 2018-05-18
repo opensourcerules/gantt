@@ -53,7 +53,7 @@ class Authentication extends Base
      * @param string $accessKey
      * @return bool
      */
-    public function login(string $accessKey) : bool
+    public function login(string $accessKey): bool
     {
         /**
          * @var ResultSetSimple $admins
@@ -81,7 +81,7 @@ class Authentication extends Base
      * Removes the session variable stored by login
      * @return void
      */
-    public function logout() : void
+    public function logout(): void
     {
         $this->sessionService->remove('worker_session');
         $this->flashSession->success('You are now logged out!');
@@ -91,7 +91,7 @@ class Authentication extends Base
      * Checks if worker is logged in
      * @return bool
      */
-    public function isLoggedIn() : bool
+    public function isLoggedIn(): bool
     {
         $admin = $this->sessionService->get('worker_session');
 
@@ -107,7 +107,7 @@ class Authentication extends Base
      * @param string $password
      * @return string
      */
-    public function hashPassword(string $password) : string
+    public function hashPassword(string $password): string
     {
         return $this->securityService->hash($password);
     }

@@ -10,7 +10,6 @@ use Phalcon\Flash\Session as FlashSession;
 use Phalcon\Security;
 use GanttDashboard\App\Models\Workers;
 use GanttDashboard\App\Services\Authentication as AuthenticationService;
-use GanttDashboard\App\Services\Base as BaseService;
 use GanttDashboard\App\Services\Worker as WorkerService;
 use Phalcon\Mvc\Dispatcher;
 use Phalcon\Events\Manager;

@@ -86,7 +86,7 @@ class Worker extends Base
      * @param array $worker
      * @return array
      */
-    public function validation(array $worker) : array
+    public function validation(array $worker): array
     {
         return $this->buildErrorsForView($this->validate($worker));
     }

@@ -28,7 +28,7 @@ class ControllerBase extends Controller
      * @param bool $externalRedirect
      * @return Response
      */
-    public function redirectTo($location = null, $statusCode = 200, $externalRedirect = false) : object
+    public function redirectTo($location = null, $statusCode = 200, $externalRedirect = false): object
     {
         return $this->response->redirect($location, $externalRedirect, $statusCode);
     }

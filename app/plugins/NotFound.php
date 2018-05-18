@@ -16,7 +16,7 @@ class NotFound
      * @param Exception $exception
      * @return bool
      */
-    public function beforeException(Event $event, Dispatcher $dispatcher, Exception $exception) : bool
+    public function beforeException(Event $event, Dispatcher $dispatcher, Exception $exception): bool
     {
         if ($exception instanceof DispatchException) {
             $dispatcher->forward([

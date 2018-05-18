@@ -13,7 +13,7 @@ class Base extends Validation
      * @param Group $messages
      * @return array
      */
-    protected function buildErrorsForView(Group $messages) : array
+    protected function buildErrorsForView(Group $messages): array
     {
         $errors = [];
 

@@ -35,7 +35,7 @@ class WorkerController extends ControllerBase
      * Initialises the workerService, workerValidator and workerModel properties
      * @return void
      */
-    public function onConstruct() : void
+    public function onConstruct(): void
     {
         $getDI                 = $this->getDi();
         $this->workerService   = $getDI->get(WorkerService::class);
@@ -49,7 +49,7 @@ class WorkerController extends ControllerBase
      * @param string $accessKey
      * @return Response|ResponseInterface
      */
-    public function loginAction(string $accessKey = '') : object
+    public function loginAction(string $accessKey = ''): object
     {
         if (false === $this->authenticationService->login($accessKey)) {
             return $this->redirectTo(['for' => 'notFound'], 404);
@@ -62,7 +62,7 @@ class WorkerController extends ControllerBase
      * Performs the logout
      * @return Response|ResponseInterface
      */
-    public function logoutAction() : object
+    public function logoutAction(): object
     {
         $this->authenticationService->logout();
 
@@ -72,7 +72,7 @@ class WorkerController extends ControllerBase
     /**
      * If admin is logged in, registers new worker.
      */
-    public function registerAction() : void
+    public function registerAction(): void
     {
         if (false === $this->authenticationService->isLoggedIn()) {
             $this->redirectTo(['for' => 'home'], 403);

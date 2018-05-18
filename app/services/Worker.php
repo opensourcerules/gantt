@@ -52,7 +52,7 @@ class Worker extends Base
      * @param array $worker
      * @return bool
      */
-    public function register(array $worker) : bool
+    public function register(array $worker): bool
     {
         if (true === empty($worker)) {
             return false;
