@@ -2,16 +2,18 @@
 
 namespace GanttDashboard\App\Controllers;
 
-class IndexController extends ControllerBase
+use Phalcon\Mvc\Controller;
+
+class IndexController extends Controller
 {
-    public function indexAction()
+    public function indexAction(): void
     {
     }
 
     /**
      * Define the notFound action
      */
-    public function notFoundAction()
+    public function notFoundAction(): void
     {
         $this->response->setStatusCode(404, "Not Found");
         $this->response->send();

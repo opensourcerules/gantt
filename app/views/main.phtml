@@ -10,10 +10,10 @@
 </head>
 <body>
     <div class="container-fluid">
-        {{ partial("partials/menu") }}
+        {{ partial('partials/menu') }}
 
-        {%if true === session.has('worker_session') %}
-            {{ partial("partials/adminmenu") }}
+        {%if true === session.has('admin') %}
+            {{ partial('partials/adminmenu') }}
         {% endif %}
         <hr />
     </div>

@@ -11,6 +11,14 @@ $router->addGet('/', [
 ])->setName('home');
 
 /**
+ * Add worker route with register action
+ */
+$router->addGet('/worker/register', [
+    'controller' => 'Worker',
+    'action'     => 'register',
+])->setName('registerWorker');
+
+/**
  * Add not found route
  */
 $router->addGet('/index/notFound', [

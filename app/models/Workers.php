@@ -37,26 +37,12 @@ class Workers extends Model
     protected $email;
 
     /**
-     *
-     * @var string
-     * @Column(column="password", type="string", length=255, nullable=true)
-     */
-    protected $password;
-
-    /**
-     *
-     * @var boolean
-     * @Column(column="admin", type="boolean", default=false)
-     */
-    protected $admin;
-
-    /**
      * Method to set the value of field lastName
      *
      * @param string $lastName
      * @return $this
      */
-    public function setLastName($lastName)
+    public function setLastName($lastName): object
     {
         $this->lastName = $lastName;
 
@@ -69,7 +55,7 @@ class Workers extends Model
      * @param string $firstName
      * @return $this
      */
-    public function setFirstName($firstName)
+    public function setFirstName($firstName): object
     {
         $this->firstName = $firstName;
 
@@ -82,35 +68,9 @@ class Workers extends Model
      * @param string $email
      * @return $this
      */
-    public function setEmail($email)
+    public function setEmail($email): object
     {
         $this->email = $email;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field password
-     *
-     * @param string $password
-     * @return $this
-     */
-    public function setPassword($password)
-    {
-        $this->password = $password;
-
-        return $this;
-    }
-
-    /**
-     * Method to set the value of field admin
-     *
-     * @param boolean $admin
-     * @return $this
-     */
-    public function setAdmin($admin)
-    {
-        $this->admin = $admin;
 
         return $this;
     }
@@ -120,7 +80,7 @@ class Workers extends Model
      *
      * @return integer
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -130,7 +90,7 @@ class Workers extends Model
      *
      * @return string
      */
-    public function getLastName()
+    public function getLastName(): string
     {
         return $this->lastName;
     }
@@ -140,7 +100,7 @@ class Workers extends Model
      *
      * @return string
      */
-    public function getFirstName()
+    public function getFirstName(): string
     {
         return $this->firstName;
     }
@@ -150,29 +110,9 @@ class Workers extends Model
      *
      * @return string
      */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
-    }
-
-    /**
-     * Returns the value of field password
-     *
-     * @return string
-     */
-    public function getPassword()
-    {
-        return $this->password;
-    }
-
-    /**
-     * Returns the value of field admin
-     *
-     * @return boolean
-     */
-    public function getAdmin()
-    {
-        return $this->admin;
     }
 
     /**
@@ -181,15 +121,13 @@ class Workers extends Model
      *
      * @return array
      */
-    public function columnMap()
+    public function columnMap(): array
     {
         return [
             'id' => 'id',
             'last_name' => 'lastName',
             'first_name' => 'firstName',
-            'email' => 'email',
-            'password' => 'password',
-            'admin' => 'admin'
+            'email' => 'email'
         ];
     }
 }
