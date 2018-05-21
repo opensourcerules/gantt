@@ -62,9 +62,17 @@ class Worker extends Validation
 
         $this->add(
             'email',
-            new Uniqueness([
-                'model'   => $workerModel,
-                'message' => 'This email is already registered.',
+            new Callback([
+                'callback' => function ($data) use ($workerModel) {
+                    if (false === isset($data['id'])) {
+                        new Uniqueness([
+                            'model'   => $workerModel,
+                            'message' => 'This email is already registered.',
+                        ]);
+                    }
+
+                    return true;
+                }
             ])
         );
     }

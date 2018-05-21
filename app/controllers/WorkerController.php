@@ -81,4 +81,27 @@ class WorkerController extends Controller
 
         $this->view->errors = $errors;
     }
+
+    /**
+     * If admin is logged in, updates worker via worker service.
+     */
+    public function editAction(): void
+    {
+        if (false === $this->authenticationService->isLoggedIn()) {
+            $this->view->disable();
+            $this->response->redirect(['for' => 'home']);
+        }
+
+        $worker = $this->request->getPost();
+        $errors = $this->workerService->edit($worker);
+
+        if (0 == $errors->count()) {
+            $this->flashSession->success('Worker update successful');
+            $this->view->disable();
+            $this->response->redirect(['for' => 'editWorker']);
+        }
+
+        $this->view->errors = $errors;
+        $this->view->workers = $this->workerService->getWorkers();
+    }
 }

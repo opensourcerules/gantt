@@ -48,4 +48,39 @@ class Worker
 
         return $errors;
     }
+
+    /**
+     *Gets all the workers from db via model
+     * @return \Phalcon\Mvc\Model\ResultsetInterface;
+     */
+    public function getWorkers(): object
+    {
+        return $this->workerModel->find([
+            'columns' => "id, CONCAT(firstName, ' ', lastName, ' : ', email) AS allInfo",
+            'order' => 'allInfo',
+        ]);
+    }
+
+    /**
+     * Updates the worker via model in db
+     * @param array $workerUpdate
+     * @return \Phalcon\Validation\Message\Group
+     */
+    public function edit(array $workerUpdate): object
+    {
+        $errors = $this->workerValidator->validate($workerUpdate);
+
+        if (0 == $errors->count()) {
+            /**
+             * @var $worker \GanttDashboard\App\Models\Workers
+             */
+            $worker = Workers::findFirstById($workerUpdate['id']);
+            $worker->setLastName($workerUpdate['lastName']);
+            $worker->setFirstName($workerUpdate['firstName']);
+            $worker->setEmail($workerUpdate['email']);
+            $worker->update();
+        }
+
+        return $errors;
+    }
 }

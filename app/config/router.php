@@ -19,6 +19,14 @@ $router->addGet('/worker/register', [
 ])->setName('registerWorker');
 
 /**
+ * Add worker route with edit action
+ */
+$router->addGet('/worker/edit', [
+    'controller' => 'Worker',
+    'action'     => 'edit',
+])->setName('editWorker');
+
+/**
  * Add not found route
  */
 $router->addGet('/index/notFound', [
