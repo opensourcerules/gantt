@@ -36,14 +36,13 @@ class WorkerController extends Controller
      */
     public function loginAction(string $accessKey = ''): object
     {
-        if (false === $this->authenticationService->login($accessKey)) {
-            $this->view->disable();
+        $this->view->disable();
 
+        if (false === $this->authenticationService->login($accessKey)) {
             return $this->response->redirect(['for' => 'notFound'], false, 404);
         }
 
         $this->flashSession->success('You are now logged in as ADMIN!');
-        $this->view->disable();
 
         return $this->response->redirect(['for' => 'home']);
     }
@@ -72,20 +71,14 @@ class WorkerController extends Controller
         }
 
         $worker = $this->request->getPost();
+        $errors = $this->workerService->register($worker);
 
-        /**
-         * If submit
-         */
-        if (count($worker) > 0) {
-            $errors = $this->workerService->register($worker);
-
-            if (0 == $errors->count()) {
-                $this->flashSession->success('Worker registration successful');
-                $this->view->disable();
-                $this->response->redirect(['for' => 'registerWorker']);
-            }
-
-            $this->view->errors = $errors;
+        if (0 == $errors->count()) {
+            $this->flashSession->success('Worker registration successful');
+            $this->view->disable();
+            $this->response->redirect(['for' => 'registerWorker']);
         }
+
+        $this->view->errors = $errors;
     }
 }

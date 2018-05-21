@@ -17,6 +17,12 @@ class Worker extends Validation
      */
     public function __construct(Workers $workerModel)
     {
+        $this->add(
+            'submit',
+            new PresenceOf([
+                'cancelOnFail' => true,
+            ])
+        );
 
         $this->add(
             'firstName',
