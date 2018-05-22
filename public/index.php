@@ -64,9 +64,15 @@ try {
     include APP_PATH . '/config/loader.php';
 
     /**
+     * Include Middleware
+     */
+    include APP_PATH . '/config/middleware.php';
+
+    /**
      * Handle the request
      */
     $application = new \Phalcon\Mvc\Application($di);
+    $application->setEventsManager($di->getShared('eventsManager'));
 
     echo str_replace(["\n","\r","\t"], '', $application->handle()->getContent());
 } catch (\Exception $e) {

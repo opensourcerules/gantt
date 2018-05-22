@@ -11,9 +11,9 @@ use GanttDashboard\App\Models\Workers;
 use GanttDashboard\App\Services\Authentication as AuthenticationService;
 use GanttDashboard\App\Services\Worker as WorkerService;
 use Phalcon\Mvc\Dispatcher;
-use Phalcon\Events\Manager;
 use GanttDashboard\App\Plugins\NotFound;
 use GanttDashboard\App\Validators\Worker as WorkerValidator;
+use GanttDashboard\App\Middleware\Redirect as RedirectMiddleware;
 
 /**
  * Shared configuration service
@@ -165,15 +165,24 @@ $di->setShared(WorkerService::class, function () {
 });
 
 /**
+ * Register Middleware
+ */
+$di->setShared(RedirectMiddleware::class, function () {
+    return new RedirectMiddleware(
+        $this->get(AuthenticationService::class)
+    );
+});
+
+/**
  * Register a dispatcher
  */
-$di->set('dispatcher', function () {
+$di->set('dispatcher', function () use ($di) {
     $dispatcher = new Dispatcher();
 
     /**
      * Create an EventManager
      */
-    $eventsManager = new Manager();
+    $eventsManager = $di->get('eventsManager');
 
     /**
      * Create not found exceptions

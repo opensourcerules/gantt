@@ -31,7 +31,7 @@ class Worker
     }
 
     /**
-     * Registers the worker via model in db
+     * Registers the worker via model in database
      * @param array $worker
      * @return \Phalcon\Validation\Message\Group
      */
@@ -50,19 +50,16 @@ class Worker
     }
 
     /**
-     *Gets all the workers from db via model
-     * @return \Phalcon\Mvc\Model\ResultsetInterface;
+     *Gets all the workers with full name from database via model
+     * @return array
      */
-    public function getWorkers(): object
+    public function getWorkers(): array
     {
-        return $this->workerModel->find([
-            'columns' => "id, CONCAT(firstName, ' ', lastName, ' : ', email) AS allInfo",
-            'order' => 'allInfo',
-        ]);
+        return $this->workerModel->getWorkersWithFullName();
     }
 
     /**
-     * Updates the worker via model in db
+     * Updates the worker via model in database
      * @param array $workerUpdate
      * @return \Phalcon\Validation\Message\Group
      */

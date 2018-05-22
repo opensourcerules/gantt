@@ -65,11 +65,6 @@ class WorkerController extends Controller
      */
     public function registerAction(): void
     {
-        if (false === $this->authenticationService->isLoggedIn()) {
-            $this->view->disable();
-            $this->response->redirect(['for' => 'home']);
-        }
-
         $worker = $this->request->getPost();
         $errors = $this->workerService->register($worker);
 
@@ -87,11 +82,6 @@ class WorkerController extends Controller
      */
     public function editAction(): void
     {
-        if (false === $this->authenticationService->isLoggedIn()) {
-            $this->view->disable();
-            $this->response->redirect(['for' => 'home']);
-        }
-
         $worker = $this->request->getPost();
         $errors = $this->workerService->edit($worker);
 
