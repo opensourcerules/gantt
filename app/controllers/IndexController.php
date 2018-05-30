@@ -6,8 +6,12 @@ use Phalcon\Mvc\Controller;
 
 class IndexController extends Controller
 {
+    /**
+     * Define the index action
+     */
     public function indexAction(): void
     {
+        $this->flashSession->warning('Under construction');
     }
 
     /**
@@ -16,6 +20,5 @@ class IndexController extends Controller
     public function notFoundAction(): void
     {
         $this->response->setStatusCode(404, "Not Found");
-        $this->response->send();
     }
 }

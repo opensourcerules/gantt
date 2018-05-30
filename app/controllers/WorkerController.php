@@ -5,6 +5,7 @@ namespace GanttDashboard\App\Controllers;
 use Phalcon\Mvc\Controller;
 use GanttDashboard\App\Services\Authentication as AuthenticationService;
 use GanttDashboard\App\Services\Worker as WorkerService;
+use GanttDashboard\App\Models\Workers;
 
 class WorkerController extends Controller
 {
@@ -66,7 +67,7 @@ class WorkerController extends Controller
     public function registerAction(): void
     {
         $worker = $this->request->getPost();
-        $errors = $this->workerService->register($worker);
+        $errors = $this->workerService->register(new Workers(), $worker);
 
         if (0 == $errors->count()) {
             $this->flashSession->success('Worker registration successful');
@@ -74,13 +75,24 @@ class WorkerController extends Controller
             $this->response->redirect(['for' => 'registerWorker']);
         }
 
-        $this->view->errors = $errors;
+        $this->view->setVar('errors', $errors);
     }
 
     /**
-     * If admin is logged in, updates worker via worker service.
+     * It sends the workers to view, in order to choose the worker for edit.
+     * Its route is worker/edit
      */
-    public function editAction(): void
+    public function beforeEditAction(): void
+    {
+        $this->view->setVar('workers', $this->workerService->getSortedWorkers());
+    }
+
+    /**
+     * If admin is logged in, sends worker to view.
+     * its route is worker/edit/id
+     * @param int $id
+     */
+    public function editAction(int $id): void
     {
         $worker = $this->request->getPost();
         $errors = $this->workerService->edit($worker);
@@ -88,10 +100,11 @@ class WorkerController extends Controller
         if (0 == $errors->count()) {
             $this->flashSession->success('Worker update successful');
             $this->view->disable();
-            $this->response->redirect(['for' => 'editWorker']);
+            $this->response->redirect(['for' => 'beforeEditWorker']);
         }
 
-        $this->view->errors = $errors;
-        $this->view->workers = $this->workerService->getWorkers();
+        $this->view->setVar('errors', $errors);
+        $this->view->setVar('worker', $this->workerService->getWorker($id));
+        $this->view->setVar('post', $worker);
     }
 }

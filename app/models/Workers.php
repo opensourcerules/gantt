@@ -116,22 +116,6 @@ class Workers extends Model
     }
 
     /**
-     * Returns multidimensional array with id and full name of all workers
-     * @return array
-     */
-    public function getWorkersWithFullName()
-    {
-        $fullNameWorkers = [];
-        $allWorkers = Workers::find(['order' => 'firstName, lastName'])->toArray();
-
-        foreach ($allWorkers as $worker) {
-            $fullNameWorkers[$worker['id']] = $worker['firstName'] . ' ' . $worker['lastName'];
-        }
-
-        return $fullNameWorkers;
-    }
-
-    /**
      * Independent Column Mapping.
      * Keys are the real names in the table and the values their names in the application
      *

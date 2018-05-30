@@ -1,53 +1,66 @@
 <?php
 
-$router = $di->getRouter();
+use Phalcon\Mvc\Router\Group as RouterGroup;
+use Phalcon\Mvc\Router;
+
+$router = new Router(false);
 
 /**
- * Add index route with index action
+ * Set 404 path
  */
-$router->addGet('/', [
+$router->notFound([
     'controller' => 'Index',
-    'action'     => 'index',
+    'action'     => 'notFound',
+]);
+
+/**
+ * Create a group with index controller
+ */
+$index = new RouterGroup([
+    'controller' => 'Index',
+]);
+
+$index->add('/', [
+    'action' => 'index',
 ])->setName('home');
 
-/**
- * Add worker route with register action
- */
-$router->addGet('/worker/register', [
-    'controller' => 'Worker',
-    'action'     => 'register',
-])->setName('registerWorker');
-
-/**
- * Add worker route with edit action
- */
-$router->addGet('/worker/edit', [
-    'controller' => 'Worker',
-    'action'     => 'edit',
-])->setName('editWorker');
-
-/**
- * Add not found route
- */
-$router->addGet('/index/notFound', [
-    'controller' => 'Index',
-    'action'     => 'notFound',
+$index->add('/index/notfound', [
+    'action' => 'notFound',
 ])->setName('notFound');
 
-/**
- * Add not found for numeric controllers and actions
- */
-$router->addGet('/([0-9]+)/([0-9]+)', [
-    'controller' => 'Index',
-    'action'     => 'notFound',
-]);
+$router->mount($index);
 
 /**
- * Add not found for numeric controllers
+ * Create a group with a Worker controller
  */
-$router->addGet('/([0-9]+)', [
-    'controller' => 'Index',
-    'action'     => 'notFound',
+$worker = new RouterGroup([
+    'controller' => 'Worker',
 ]);
+
+$worker->setPrefix('/worker');
+
+$worker->add('/register', [
+    'action' => 'register',
+])->setName('registerWorker');
+
+$worker->add('/edit/{id:[0-9]+}', [
+    'action' => 'edit',
+])->setName('editWorker');
+
+$worker->add('/edit', [
+    'action' => 'beforeEdit',
+])->setName('beforeEditWorker');
+
+$worker->add('/logout', [
+    'action' => 'logout',
+]);
+
+$worker->add('/login/{accessKey:[a-zA-Z0-9]+}', [
+    'action' => 'login',
+]);
+
+$router->mount($worker);
 
 $router->handle();
+
+return $router;

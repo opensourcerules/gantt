@@ -1,4 +1,6 @@
 .phalcon
 .git
 .idea
+vendor
 !.gitkeep
+composer.lock

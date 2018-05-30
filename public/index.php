@@ -2,7 +2,7 @@
 
 namespace GanttDashboard;
 
-use Phalcon\Di\FactoryDefault;
+use GanttDashboard\App\Providers\MyDi;
 
 /**
  * Application environment
@@ -36,12 +36,13 @@ define('BASE_PATH', dirname(__DIR__));
 define('APP_PATH', BASE_PATH . '/app');
 
 try {
-
     /**
-     * The FactoryDefault Dependency Injector automatically registers
-     * the services that provide a full stack framework.
+     * Use composer autoloader to load vendor classes
      */
-    $di = new FactoryDefault();
+    require_once BASE_PATH . "/vendor/autoload.php";
+
+    $di = new MyDi();
+    $di->initialize();
 
     /**
      * Handle routes
@@ -49,24 +50,9 @@ try {
     include APP_PATH . '/config/router.php';
 
     /**
-     * Read services
-     */
-    include APP_PATH . '/config/services.php';
-
-    /**
      * Get config service for use in inline setup below
      */
-    $config = $di->getConfig();
-
-    /**
-     * Include Autoloader
-     */
-    include APP_PATH . '/config/loader.php';
-
-    /**
-     * Include Middleware
-     */
-    include APP_PATH . '/config/middleware.php';
+    $config = $di->get('config');
 
     /**
      * Handle the request
@@ -74,7 +60,7 @@ try {
     $application = new \Phalcon\Mvc\Application($di);
     $application->setEventsManager($di->getShared('eventsManager'));
 
-    echo str_replace(["\n","\r","\t"], '', $application->handle()->getContent());
+    $application->handle()->send();
 } catch (\Exception $e) {
     echo $e->getMessage() . '<br>';
     echo '<pre>' . $e->getTraceAsString() . '</pre>';

@@ -13,49 +13,59 @@ class Worker
     private $workerValidator;
 
     /**
-     * @var Workers
-     */
-    private $workerModel;
-
-    /**
-     * Constructs the needed services, set in DI, for validators service and model
+     * Constructs the needed service, set in DI, for validators service
      * @param WorkerValidator $workerValidator
-     * @param Workers $workerModel
      */
     public function __construct(
-        WorkerValidator $workerValidator,
-        Workers $workerModel
+        WorkerValidator $workerValidator
     ) {
         $this->workerValidator = $workerValidator;
-        $this->workerModel = $workerModel;
     }
 
     /**
      * Registers the worker via model in database
+     * @param Workers $workerModel
      * @param array $worker
      * @return \Phalcon\Validation\Message\Group
      */
-    public function register(array $worker): object
+    public function register(Workers $workerModel, array $worker): object
     {
         $errors = $this->workerValidator->validate($worker);
 
         if (0 == $errors->count()) {
-            $this->workerModel->setLastName($worker['lastName']);
-            $this->workerModel->setFirstName($worker['firstName']);
-            $this->workerModel->setEmail($worker['email']);
-            $this->workerModel->create();
+            $workerModel->setLastName($worker['lastName']);
+            $workerModel->setFirstName($worker['firstName']);
+            $workerModel->setEmail($worker['email']);
+            $workerModel->create();
         }
 
         return $errors;
     }
 
     /**
-     *Gets all the workers with full name from database via model
-     * @return array
+     * Gets all the workers sorted from database via model
+     * @return \Phalcon\MVC\Model\ResultsetInterface
      */
-    public function getWorkers(): array
+    public function getSortedWorkers(): object
     {
-        return $this->workerModel->getWorkersWithFullName();
+        return Workers::find([
+            'order' => 'firstName, lastName, email'
+        ]);
+    }
+
+    /**
+     * Gets worker from database via model
+     * @param int $id
+     * @return \Phalcon\MVC\Model\ResultsetInterface
+     */
+    public function getWorker(int $id): object
+    {
+        return Workers::findFirst([
+            'id = :id:',
+            'bind' => [
+                'id' => $id
+            ]
+        ]);
     }
 
     /**
@@ -68,10 +78,7 @@ class Worker
         $errors = $this->workerValidator->validate($workerUpdate);
 
         if (0 == $errors->count()) {
-            /**
-             * @var $worker \GanttDashboard\App\Models\Workers
-             */
-            $worker = Workers::findFirstById($workerUpdate['id']);
+            $worker = $this->getWorker($workerUpdate['id']);
             $worker->setLastName($workerUpdate['lastName']);
             $worker->setFirstName($workerUpdate['firstName']);
             $worker->setEmail($workerUpdate['email']);

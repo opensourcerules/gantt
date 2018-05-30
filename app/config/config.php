@@ -29,6 +29,7 @@ return new \Phalcon\Config([
         'servicesDir'    => APP_PATH . '/services/',
         'validatorsDir'  => APP_PATH . '/validators/',
         'middlewareDir'  => APP_PATH . '/middleware/',
+        'providersDir'  => APP_PATH . '/providers/',
 
         // This allows the baseUri to be understand project paths that are not in the root directory
         // of the web space.  This will break if the public/index.php entry point is moved or

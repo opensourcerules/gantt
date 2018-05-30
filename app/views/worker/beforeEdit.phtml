@@ -1,0 +1,31 @@
+<h3>Choose worker to edit</h3>
+
+<div class="container">
+
+    <div class="row font-weight-bold">
+        <div class="col">
+            First Name
+        </div>
+        <div class="col">
+            Last Name
+        </div>
+        <div class="col">
+            Email
+        </div>
+    </div>
+
+{% for worker in workers%}
+        <div class="row">
+            <div class="col">
+                {{ link_to('worker/edit/' ~  worker.id, worker.firstName) }}
+            </div>
+            <div class="col">
+                {{ link_to('worker/edit/' ~  worker.id, worker.lastName) }}
+            </div>
+            <div class="col">
+                {{ link_to('worker/edit/' ~  worker.id, worker.email) }}
+            </div>
+        </div>
+{% endfor %}
+
+</div>
