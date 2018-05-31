@@ -2,7 +2,7 @@
 
 <div class="container">
 
-    <div class="row font-weight-bold">
+    <div class="row font-weight-bold bg-light border p-2">
         <div class="col">
             First Name
         </div>
@@ -15,15 +15,15 @@
     </div>
 
 {% for worker in workers%}
-        <div class="row">
+        <div class="row border border-top-0 p-1">
             <div class="col">
-                {{ link_to('worker/edit/' ~  worker.id, worker.firstName) }}
+                {{ link_to('worker/edit/' ~  worker.id, worker.firstName, 'class': 'text-dark') }}
             </div>
             <div class="col">
-                {{ link_to('worker/edit/' ~  worker.id, worker.lastName) }}
+                {{ link_to('worker/edit/' ~  worker.id, worker.lastName, 'class': 'text-dark') }}
             </div>
             <div class="col">
-                {{ link_to('worker/edit/' ~  worker.id, worker.email) }}
+                {{ link_to('worker/edit/' ~  worker.id, worker.email, 'class': 'text-dark') }}
             </div>
         </div>
 {% endfor %}

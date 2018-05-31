@@ -2,24 +2,16 @@
 
 namespace GanttDashboard\App\Providers;
 
-use Phalcon\Annotations\Adapter\Memory;
 use Phalcon\Di;
-use Phalcon\Escaper;
-use Phalcon\Http\Request;
-use Phalcon\Http\Response;
-use Phalcon\Mvc\Model\Manager;
-use Phalcon\Mvc\Model\MetaData\Memory as MetaDataMemory;
-use Phalcon\Tag;
-use Phalcon\Mvc\Model\Transaction\Manager as TransactionManager;
 
 class MyDi extends Di
 {
     /**
-     * Registers the service providers
-     * @return void
+     * Constructs the service providers
      */
-    public function initialize(): void
+    public function __construct()
     {
+        parent::__construct();
         $this->register(new RegisterConfig());
         $this->register(new RegisterRouter());
         $this->register(new RegisterView());
@@ -33,13 +25,13 @@ class MyDi extends Di
         $this->register(new RegisterUrl());
         $this->register(new RegisterDb());
         $this->register(new RegisterValidators());
-        $this->setShared('request', Request::class);
-        $this->setShared('response', Response::class);
-        $this->setShared('tag', Tag::class);
-        $this->setShared('escaper', Escaper::class);
-        $this->setShared('annotations', Memory::class);
-        $this->setShared('modelsManager', Manager::class);
-        $this->setShared('modelsMetadata', MetaDataMemory::class);
-        $this->setShared('transactionManager', TransactionManager::class);
+        $this->register(new RegisterRequest());
+        $this->register(new RegisterResponse());
+        $this->register(new RegisterTag());
+        $this->register(new RegisterEscaper());
+        $this->register(new RegisterAnnotations());
+        $this->register(new RegisterModelsManager());
+        $this->register(new RegisterMetadataMemory());
+        $this->register(new RegisterTransactionManager());
     }
 }

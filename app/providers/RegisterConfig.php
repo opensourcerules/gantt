@@ -4,6 +4,7 @@ namespace GanttDashboard\App\Providers;
 
 use Phalcon\Di\ServiceProviderInterface;
 use Phalcon\DiInterface;
+use Phalcon\Config;
 
 class RegisterConfig implements ServiceProviderInterface
 {
@@ -15,7 +16,9 @@ class RegisterConfig implements ServiceProviderInterface
     public function register(DiInterface $di): void
     {
         $di->setShared('config', function () {
-            return include APP_PATH . '/config/config.php';
+            require APP_PATH . '/config/config.php';
+
+            return new Config($settings);
         });
     }
 }

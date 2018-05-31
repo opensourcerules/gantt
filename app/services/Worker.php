@@ -4,6 +4,9 @@ namespace GanttDashboard\App\Services;
 
 use GanttDashboard\App\Models\Workers;
 use GanttDashboard\App\Validators\Worker as WorkerValidator;
+use Phalcon\MVC\Model\ResultsetInterface;
+use Phalcon\Validation\Message\Group as MessageGroup;
+use \Phalcon\Mvc\Model;
 
 class Worker
 {
@@ -26,9 +29,9 @@ class Worker
      * Registers the worker via model in database
      * @param Workers $workerModel
      * @param array $worker
-     * @return \Phalcon\Validation\Message\Group
+     * @return MessageGroup
      */
-    public function register(Workers $workerModel, array $worker): object
+    public function register(Workers $workerModel, array $worker): MessageGroup
     {
         $errors = $this->workerValidator->validate($worker);
 
@@ -44,9 +47,9 @@ class Worker
 
     /**
      * Gets all the workers sorted from database via model
-     * @return \Phalcon\MVC\Model\ResultsetInterface
+     * @return ResultsetInterface
      */
-    public function getSortedWorkers(): object
+    public function getSortedWorkers(): ResultsetInterface
     {
         return Workers::find([
             'order' => 'firstName, lastName, email'
@@ -56,9 +59,9 @@ class Worker
     /**
      * Gets worker from database via model
      * @param int $id
-     * @return \Phalcon\MVC\Model\ResultsetInterface
+     * @return Model
      */
-    public function getWorker(int $id): object
+    public function getWorker(int $id): Model
     {
         return Workers::findFirst([
             'id = :id:',
@@ -71,13 +74,17 @@ class Worker
     /**
      * Updates the worker via model in database
      * @param array $workerUpdate
-     * @return \Phalcon\Validation\Message\Group
+     * @return MessageGroup
      */
-    public function edit(array $workerUpdate): object
+    public function edit(array $workerUpdate): MessageGroup
     {
         $errors = $this->workerValidator->validate($workerUpdate);
 
         if (0 == $errors->count()) {
+
+            /**
+             * @var $worker Workers
+             */
             $worker = $this->getWorker($workerUpdate['id']);
             $worker->setLastName($workerUpdate['lastName']);
             $worker->setFirstName($workerUpdate['firstName']);

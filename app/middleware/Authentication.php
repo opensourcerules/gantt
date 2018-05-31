@@ -68,7 +68,7 @@ class Authentication
      * @param Application $application
      * @return bool
      */
-    public function beforeSendResponse(Event $event, Application $application): bool
+    public function beforeHandleRequest(Event $event, Application $application): bool
     {
         $role = self::GUEST;
 
@@ -82,6 +82,7 @@ class Authentication
 
         if ($allowed != Acl::ALLOW) {
             $application->response->redirect(['for' => 'home']);
+            $application->response->send();
 
             return false;
         }

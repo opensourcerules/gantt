@@ -4,6 +4,7 @@ namespace GanttDashboard\App\Providers;
 
 use Phalcon\Di\ServiceProviderInterface;
 use Phalcon\DiInterface;
+use Phalcon\Db\Adapter\Pdo\Factory;
 
 class RegisterDb implements ServiceProviderInterface
 {
@@ -17,8 +18,8 @@ class RegisterDb implements ServiceProviderInterface
         $di->setShared('db', function () use ($di) {
             $config = $di->get('config');
 
-            $class = 'Phalcon\Db\Adapter\Pdo\\' . $config->database->adapter;
             $params = [
+                'adapter'  => $config->database->adapter,
                 'host'     => $config->database->host,
                 'username' => $config->database->username,
                 'password' => $config->database->password,
@@ -30,7 +31,7 @@ class RegisterDb implements ServiceProviderInterface
                 unset($params['charset']);
             }
 
-            $connection = new $class($params);
+            $connection = Factory::load($params);
 
             return $connection;
         });

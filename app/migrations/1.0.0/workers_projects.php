@@ -36,7 +36,7 @@ class WorkersProjectsMigration_100 extends Migration
                             'type' => Column::TYPE_INTEGER,
                             'unsigned' => true,
                             'notNull' => true,
-                            'size' => 11,
+                            'size' => 10,
                             'first' => true
                         ]
                     ),

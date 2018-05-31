@@ -42,17 +42,6 @@ try {
     require_once BASE_PATH . "/vendor/autoload.php";
 
     $di = new MyDi();
-    $di->initialize();
-
-    /**
-     * Handle routes
-     */
-    include APP_PATH . '/config/router.php';
-
-    /**
-     * Get config service for use in inline setup below
-     */
-    $config = $di->get('config');
 
     /**
      * Handle the request

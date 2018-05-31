@@ -42,7 +42,7 @@ class Workers extends Model
      * @param string $lastName
      * @return $this
      */
-    public function setLastName($lastName): object
+    public function setLastName($lastName): Workers
     {
         $this->lastName = $lastName;
 
@@ -55,7 +55,7 @@ class Workers extends Model
      * @param string $firstName
      * @return $this
      */
-    public function setFirstName($firstName): object
+    public function setFirstName($firstName): Workers
     {
         $this->firstName = $firstName;
 
@@ -68,7 +68,7 @@ class Workers extends Model
      * @param string $email
      * @return $this
      */
-    public function setEmail($email): object
+    public function setEmail($email): Workers
     {
         $this->email = $email;
 
