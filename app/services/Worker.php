@@ -6,7 +6,7 @@ use GanttDashboard\App\Models\Workers;
 use GanttDashboard\App\Validators\Worker as WorkerValidator;
 use Phalcon\MVC\Model\ResultsetInterface;
 use Phalcon\Validation\Message\Group as MessageGroup;
-use \Phalcon\Mvc\Model;
+use Phalcon\Mvc\Model;
 
 class Worker
 {
@@ -82,9 +82,7 @@ class Worker
 
         if (0 == $errors->count()) {
 
-            /**
-             * @var $worker Workers
-             */
+            /** @var $worker Workers */
             $worker = $this->getWorker($workerUpdate['id']);
             $worker->setLastName($workerUpdate['lastName']);
             $worker->setFirstName($workerUpdate['firstName']);

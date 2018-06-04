@@ -1,13 +1,13 @@
 <?php
 
-$settings = [
+return [
     'database' => [
-    'adapter'     => 'Mysql',
-    'host'        => 'localhost',
-    'username'    => 'phalcon',
-    'password'    => 'l.$u5/aKj@b7',
-    'dbname'      => 'gantt',
-    'charset'     => 'utf8',
+        'adapter'     => 'Mysql',
+        'host'        => 'localhost',
+        'username'    => 'phalcon',
+        'password'    => 'l.$u5/aKj@b7',
+        'dbname'      => 'gantt',
+        'charset'     => 'utf8',
     ],
     'application' => [
         'appDir'         => APP_PATH . '/',
