@@ -40,7 +40,7 @@ class ProjectController extends Controller
         }
 
         $this->view->setVar('errors', $errors);
-        $view = $this->view->render('Project', 'register');
+        $view = $this->view->render('project', 'register');
 
         return $this->response->setContent($view->getContent());
     }
@@ -79,7 +79,7 @@ class ProjectController extends Controller
         $this->view->setVar('errors', $errors);
         $this->view->setVar('project', $this->projectService->getProject($id));
         $this->view->setVar('post', $project);
-        $view = $this->view->render('Project', 'edit');
+        $view = $this->view->render('project', 'edit');
 
         return $this->response->setContent($view->getContent());
     }

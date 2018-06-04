@@ -14,7 +14,7 @@
         </div>
     </div>
 
-{% for worker in workers%}
+{% for worker in workers %}
         <div class="row border border-top-0 p-1">
             <div class="col">
                 {{ link_to(['for': 'editWorker', 'id': worker.id], worker.firstName, 'class': 'text-dark') }}
