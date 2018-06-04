@@ -80,6 +80,35 @@ class RegisterRouter implements ServiceProviderInterface
             ]);
 
             $router->mount($worker);
+            
+            /**
+             * Create a group with a Project controller
+             */
+            $project = new RouterGroup([
+                'controller' => 'Project',
+            ]);
+
+            $project->setPrefix('/project');
+
+            $project->add('/register', [
+                'action' => 'register',
+            ])->via([
+                'POST',
+                'GET'
+            ])->setName('registerProject');
+
+            $project->add('/edit/{id:[0-9]+}', [
+                'action' => 'edit',
+            ])->via([
+                'POST',
+                'GET'
+            ])->setName('editProject');
+
+            $project->addGet('/edit', [
+                'action' => 'beforeEdit',
+            ])->setName('beforeEditProject');
+
+            $router->mount($project);
 
             return $router;
         });

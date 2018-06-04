@@ -1,0 +1,25 @@
+<h3>Choose project to edit</h3>
+
+<div class="container">
+
+    <div class="row font-weight-bold bg-light border p-2">
+        <div class="col">
+            Name
+        </div>
+        <div class="col">
+            Description
+        </div>
+    </div>
+
+{% for project in projects%}
+        <div class="row border border-top-0 p-1">
+            <div class="col">
+                {{ link_to(['for': 'editProject', 'id': project.id], project.name, 'class': 'text-dark') }}
+            </div>
+            <div class="col">
+                {{ link_to(['for': 'editProject', 'id': project.id], project.description, 'class': 'text-dark') }}
+            </div>
+        </div>
+{% endfor %}
+
+</div>

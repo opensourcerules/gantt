@@ -1,0 +1,61 @@
+<h3>Edit project</h3>
+
+{% set haveErrors = true %}
+{% if errors.filter('submit')|length == 1 and errors|length == 1 %}
+    {% set haveErrors = false %}
+{% endif %}
+
+{{ form('project/edit/' ~ project.id, 'method': 'post', 'id': 'project_edit_form') }}
+
+    <fieldset>
+            <div class='form-group'>
+            <label for='name'>Name</label>
+            <div class='row justify-content-center'>
+                <div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>
+                    {% if haveErrors and errors.filter('name')|length > 0 %}
+                    <div class='text-danger'>
+                        {% for index, error in errors.filter('name') %}
+                            {{ error.getMessage() }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div class='controls'>
+                        {{ text_field('id', 'class': 'form-control', 'value': project.id, 'hidden': true) }}
+                        {% if haveErrors %}
+                            {{ text_field('name', 'class': 'form-control', 'value': post['name']) }}
+                        {% else %}
+                            {{ text_field('name', 'class': 'form-control', 'value': project.name) }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class='form-group'>
+            <label for='description'>Description</label>
+            <div class='row justify-content-center'>
+                <div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>
+                    {% if haveErrors == 1 and  errors.filter('description')|length > 0 %}
+                    <div class='text-danger'>
+                        {% for index, error in errors.filter('description') %}
+                            {{ error.getMessage() }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div class='controls'>
+                        {% if haveErrors %}
+                            {{ text_field('description', 'class': 'form-control', 'value': post['description']) }}
+                        {% else %}
+                            {{ text_field('description', 'class': 'form-control', 'value': project.description) }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class='form-group'>
+            {{ submit_button('Update project', 'class': 'btn btn-primary btn-large', 'name': 'submit') }}
+        </div>
+    </fieldset>
+
+{{  endform() }}
