@@ -7,6 +7,8 @@ use Phalcon\DiInterface;
 use GanttDashboard\App\Services\Authentication as AuthenticationService;
 use GanttDashboard\App\Services\Worker as WorkerService;
 use GanttDashboard\App\Validators\Worker as WorkerValidator;
+use GanttDashboard\App\Services\Project as ProjectService;
+use GanttDashboard\App\Validators\Project as ProjectValidator;
 
 class RegisterServices implements ServiceProviderInterface
 {
@@ -32,6 +34,15 @@ class RegisterServices implements ServiceProviderInterface
         $di->setShared(WorkerService::class, function () use ($di) {
             return new WorkerService(
                 $di->get(WorkerValidator::class)
+            );
+        });
+        
+        /**
+         * Register Project service
+         */
+        $di->setShared(ProjectService::class, function () use ($di) {
+            return new ProjectService(
+                $di->get(ProjectValidator::class)
             );
         });
     }

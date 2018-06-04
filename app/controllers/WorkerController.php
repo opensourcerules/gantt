@@ -79,7 +79,7 @@ class WorkerController extends Controller
         }
 
         $this->view->setVar('errors', $errors);
-        $view = $this->view->render('Worker', 'register');
+        $view = $this->view->render('worker', 'register');
 
         return $this->response->setContent($view->getContent());
     }
@@ -92,7 +92,7 @@ class WorkerController extends Controller
     public function beforeEditAction(): ResponseInterface
     {
         $this->view->setVar('workers', $this->workerService->getSortedWorkers());
-        $view = $this->view->render('Worker', 'beforeEdit');
+        $view = $this->view->render('worker', 'beforeEdit');
 
         return $this->response->setContent($view->getContent());
     }
@@ -118,7 +118,7 @@ class WorkerController extends Controller
         $this->view->setVar('errors', $errors);
         $this->view->setVar('worker', $this->workerService->getWorker($id));
         $this->view->setVar('post', $worker);
-        $view = $this->view->render('Worker', 'edit');
+        $view = $this->view->render('worker', 'edit');
 
         return $this->response->setContent($view->getContent());
     }

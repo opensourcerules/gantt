@@ -14,7 +14,7 @@ class IndexController extends Controller
     public function indexAction(): ResponseInterface
     {
         $this->flashSession->warning('Under construction');
-        $view = $this->view->render('Index', 'index');
+        $view = $this->view->render('index', 'index');
 
         return $this->response->setContent($view->getContent());
     }
@@ -26,7 +26,7 @@ class IndexController extends Controller
     public function notFoundAction(): ResponseInterface
     {
         $this->response->setStatusCode(404, "Not Found");
-        $view = $this->view->render('Index', 'notFOund');
+        $view = $this->view->render('index', 'notFound');
 
         return $this->response->setContent($view->getContent());
     }

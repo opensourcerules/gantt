@@ -5,7 +5,7 @@
     {% set haveErrors = false %}
 {% endif %}
 
-{{ form('worker/edit/' ~ worker.id, 'method': 'post', 'id': 'worker_edit_form') }}
+{{ form(['for': 'editWorker', 'id': worker.id], 'method': 'post', 'id': 'worker_edit_form') }}
 
     <fieldset>
             <div class='form-group'>

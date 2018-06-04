@@ -4,7 +4,7 @@ namespace GanttDashboard\App\Services;
 
 use GanttDashboard\App\Models\Workers;
 use GanttDashboard\App\Validators\Worker as WorkerValidator;
-use Phalcon\MVC\Model\ResultsetInterface;
+use Phalcon\Mvc\Model\ResultsetInterface;
 use Phalcon\Validation\Message\Group as MessageGroup;
 use Phalcon\Mvc\Model;
 
