@@ -1,0 +1,8 @@
+{
+  "autoload": {
+    "psr-4": {"GanttDashboard\\App\\": "app/"}
+  },
+  "require-dev": {
+    "phalcon/ide-stubs": "*"
+  }
+}

@@ -13,9 +13,8 @@ class Worker extends Validation
 {
     /**
      * Constructs the validations for model
-     * @param Workers $workerModel
      */
-    public function __construct(Workers $workerModel)
+    public function __construct()
     {
         $this->add(
             'submit',
@@ -62,9 +61,17 @@ class Worker extends Validation
 
         $this->add(
             'email',
-            new Uniqueness([
-                'model'   => $workerModel,
-                'message' => 'This email is already registered.',
+            new Callback([
+                'callback' => function ($data) {
+                    if (false === isset($data['id'])) {
+                        new Uniqueness([
+                            'model'   => new Workers(),
+                            'message' => 'This email is already registered.',
+                        ]);
+                    }
+
+                    return true;
+                }
             ])
         );
     }

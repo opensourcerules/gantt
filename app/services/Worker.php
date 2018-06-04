@@ -4,6 +4,9 @@ namespace GanttDashboard\App\Services;
 
 use GanttDashboard\App\Models\Workers;
 use GanttDashboard\App\Validators\Worker as WorkerValidator;
+use Phalcon\MVC\Model\ResultsetInterface;
+use Phalcon\Validation\Message\Group as MessageGroup;
+use Phalcon\Mvc\Model;
 
 class Worker
 {
@@ -13,37 +16,78 @@ class Worker
     private $workerValidator;
 
     /**
-     * @var Workers
-     */
-    private $workerModel;
-
-    /**
-     * Constructs the needed services, set in DI, for validators service and model
+     * Constructs the needed service, set in DI, for validators service
      * @param WorkerValidator $workerValidator
-     * @param Workers $workerModel
      */
     public function __construct(
-        WorkerValidator $workerValidator,
-        Workers $workerModel
+        WorkerValidator $workerValidator
     ) {
         $this->workerValidator = $workerValidator;
-        $this->workerModel = $workerModel;
     }
 
     /**
-     * Registers the worker via model in db
+     * Registers the worker via model in database
+     * @param Workers $workerModel
      * @param array $worker
-     * @return \Phalcon\Validation\Message\Group
+     * @return MessageGroup
      */
-    public function register(array $worker): object
+    public function register(Workers $workerModel, array $worker): MessageGroup
     {
         $errors = $this->workerValidator->validate($worker);
 
         if (0 == $errors->count()) {
-            $this->workerModel->setLastName($worker['lastName']);
-            $this->workerModel->setFirstName($worker['firstName']);
-            $this->workerModel->setEmail($worker['email']);
-            $this->workerModel->create();
+            $workerModel->setLastName($worker['lastName']);
+            $workerModel->setFirstName($worker['firstName']);
+            $workerModel->setEmail($worker['email']);
+            $workerModel->create();
+        }
+
+        return $errors;
+    }
+
+    /**
+     * Gets all the workers sorted from database via model
+     * @return ResultsetInterface
+     */
+    public function getSortedWorkers(): ResultsetInterface
+    {
+        return Workers::find([
+            'order' => 'firstName, lastName, email'
+        ]);
+    }
+
+    /**
+     * Gets worker from database via model
+     * @param int $id
+     * @return Model
+     */
+    public function getWorker(int $id): Model
+    {
+        return Workers::findFirst([
+            'id = :id:',
+            'bind' => [
+                'id' => $id
+            ]
+        ]);
+    }
+
+    /**
+     * Updates the worker via model in database
+     * @param array $workerUpdate
+     * @return MessageGroup
+     */
+    public function edit(array $workerUpdate): MessageGroup
+    {
+        $errors = $this->workerValidator->validate($workerUpdate);
+
+        if (0 == $errors->count()) {
+
+            /** @var $worker Workers */
+            $worker = $this->getWorker($workerUpdate['id']);
+            $worker->setLastName($workerUpdate['lastName']);
+            $worker->setFirstName($workerUpdate['firstName']);
+            $worker->setEmail($workerUpdate['email']);
+            $worker->update();
         }
 
         return $errors;

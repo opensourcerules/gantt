@@ -35,7 +35,16 @@ phalcon migration run
 ```
 
 
+## Install the project dependencies 
+
+Using **composer**, in the application's folder, run:
+```
+composer install
+```
+
+
 ## Built with
 
 Phalcon 3.3.2
 Bootstrap 4.1.0
+Composer 1.6.5

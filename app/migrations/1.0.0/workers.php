@@ -37,7 +37,7 @@ class WorkersMigration_100 extends Migration
                             'unsigned' => true,
                             'notNull' => true,
                             'autoIncrement' => true,
-                            'size' => 11,
+                            'size' => 10,
                             'first' => true
                         ]
                     ),

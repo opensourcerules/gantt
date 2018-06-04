@@ -1,0 +1,83 @@
+<h3>Edit worker</h3>
+
+{% set haveErrors = true %}
+{% if errors.filter('submit')|length == 1 and errors|length == 1 %}
+    {% set haveErrors = false %}
+{% endif %}
+
+{{ form('worker/edit/' ~ worker.id, 'method': 'post', 'id': 'worker_edit_form') }}
+
+    <fieldset>
+            <div class='form-group'>
+            <label for='lastName'>Last name</label>
+            <div class='row justify-content-center'>
+                <div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>
+                    {% if haveErrors and errors.filter('lastName')|length > 0 %}
+                    <div class='text-danger'>
+                        {% for index, error in errors.filter('lastName') %}
+                            {{ error.getMessage() }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div class='controls'>
+                        {{ text_field('id', 'class': 'form-control', 'value': worker.id, 'hidden': true) }}
+                        {% if haveErrors %}
+                            {{ text_field('lastName', 'class': 'form-control', 'value': post['lastName']) }}
+                        {% else %}
+                            {{ text_field('lastName', 'class': 'form-control', 'value': worker.lastName) }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class='form-group'>
+            <label for='firstName'>First name</label>
+            <div class='row justify-content-center'>
+                <div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>
+                    {% if haveErrors == 1 and  errors.filter('firstName')|length > 0 %}
+                    <div class='text-danger'>
+                        {% for index, error in errors.filter('firstName') %}
+                            {{ error.getMessage() }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div class='controls'>
+                        {% if haveErrors %}
+                            {{ text_field('firstName', 'class': 'form-control', 'value': post['firstName']) }}
+                        {% else %}
+                            {{ text_field('firstName', 'class': 'form-control', 'value': worker.firstName) }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class='form-group'>
+            <label for='email'>Email</label>
+            <div class='row justify-content-center'>
+                <div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>
+                    {% if haveErrors and  errors.filter('email')|length > 0 %}
+                    <div class='text-danger'>
+                        {% for index, error in errors.filter('email') %}
+                            {{ error.getMessage() }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div class='controls'>
+                        {% if haveErrors %}
+                            {{ text_field('email', 'class': 'form-control', 'value': post['email']) }}
+                        {% else %}
+                            {{ text_field('email', 'class': 'form-control', 'value': worker.email) }}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class='form-group'>
+            {{ submit_button('Update worker', 'class': 'btn btn-primary btn-large', 'name': 'submit') }}
+        </div>
+    </fieldset>
+
+{{  endform() }}
