@@ -6,7 +6,7 @@ use Phalcon\Mvc\Controller;
 use GanttDashboard\App\Services\Authentication as AuthenticationService;
 use GanttDashboard\App\Services\Worker as WorkerService;
 use GanttDashboard\App\Models\Workers;
-use \Phalcon\Http\ResponseInterface;
+use Phalcon\Http\ResponseInterface;
 
 class WorkerController extends Controller
 {
@@ -26,9 +26,9 @@ class WorkerController extends Controller
      */
     public function onConstruct(): void
     {
-        $getDI                         = $this->getDi();
-        $this->workerService           = $getDI->get(WorkerService::class);
-        $this->authenticationService   = $getDI->get(AuthenticationService::class);
+        $getDI                       = $this->getDi();
+        $this->workerService         = $getDI->get(WorkerService::class);
+        $this->authenticationService = $getDI->get(AuthenticationService::class);
     }
 
     /**

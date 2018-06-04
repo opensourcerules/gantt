@@ -11,7 +11,7 @@ class Workers extends Model
      * @var integer
      * @Primary
      * @Identity
-     * @Column(column="id", type="integer", length=11, nullable=false)
+     * @Column(column="id", type="integer", length=10, nullable=false)
      */
     protected $id;
 
