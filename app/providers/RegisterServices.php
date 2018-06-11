@@ -9,6 +9,9 @@ use GanttDashboard\App\Services\Worker as WorkerService;
 use GanttDashboard\App\Validators\Worker as WorkerValidator;
 use GanttDashboard\App\Services\Project as ProjectService;
 use GanttDashboard\App\Validators\Project as ProjectValidator;
+use GanttDashboard\App\Validators\WorkerProject as WorkerProjectValidator;
+use GanttDashboard\App\Services\History as HistoryService;
+use GanttDashboard\App\Services\WorkerProject as WorkerProjectService;
 
 class RegisterServices implements ServiceProviderInterface
 {
@@ -33,7 +36,10 @@ class RegisterServices implements ServiceProviderInterface
          */
         $di->setShared(WorkerService::class, function () use ($di) {
             return new WorkerService(
-                $di->get(WorkerValidator::class)
+                $di->get(WorkerValidator::class),
+                $di->get(WorkerProjectService::class),
+                $di->get(HistoryService::class),
+                $di->get(WorkerProjectValidator::class)
             );
         });
         
@@ -45,5 +51,15 @@ class RegisterServices implements ServiceProviderInterface
                 $di->get(ProjectValidator::class)
             );
         });
+
+        /**
+         * Register WorkerProject service
+         */
+        $di->setShared(WorkerProjectService::class, WorkerProjectService::class);
+
+        /**
+         * Register History service
+         */
+        $di->setShared(HistoryService::class, HistoryService::class);
     }
 }

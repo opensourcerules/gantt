@@ -5,6 +5,7 @@ namespace GanttDashboard\App\Controllers;
 use Phalcon\Mvc\Controller;
 use GanttDashboard\App\Services\Authentication as AuthenticationService;
 use GanttDashboard\App\Services\Worker as WorkerService;
+use GanttDashboard\App\Services\Project as ProjectService;
 use GanttDashboard\App\Models\Workers;
 use Phalcon\Http\ResponseInterface;
 
@@ -14,6 +15,11 @@ class WorkerController extends Controller
      * @var WorkerService
      */
     private $workerService;
+
+    /**
+     * @var ProjectService
+     */
+    private $projectService;
 
     /**
      * @var AuthenticationService
@@ -28,6 +34,7 @@ class WorkerController extends Controller
     {
         $getDI                       = $this->getDi();
         $this->workerService         = $getDI->get(WorkerService::class);
+        $this->projectService        = $getDI->get(ProjectService::class);
         $this->authenticationService = $getDI->get(AuthenticationService::class);
     }
 
@@ -119,6 +126,48 @@ class WorkerController extends Controller
         $this->view->setVar('worker', $this->workerService->getWorker($id));
         $this->view->setVar('post', $worker);
         $view = $this->view->render('worker', 'edit');
+
+        return $this->response->setContent($view->getContent());
+    }
+
+    /**
+     * It sends the workers to view, in order to choose the worker.
+     * Its route is worker/assign
+     * @return ResponseInterface
+     */
+    public function beforeAssignAction(): ResponseInterface
+    {
+        $this->view->setVar('workers', $this->workerService->getSortedWorkers());
+        $view = $this->view->render('worker', 'beforeAssign');
+
+        return $this->response->setContent($view->getContent());
+    }
+
+    /**
+     * If admin is logged in, sends worker to view.
+     * its route is worker/assign/id
+     * @param int $id
+     * @return ResponseInterface
+     */
+    public function assignAction(int $id): ResponseInterface
+    {
+        $assignments = $this->request->getPost();
+        $errors = $this->workerService->assign($id, $assignments);
+
+        if (0 == $errors->count()) {
+            $this->flashSession->success('Worker assign successful');
+            $this->view->disable();
+
+            return $this->response->redirect(['for' => 'beforeAssignWorker']);
+        }
+
+        $this->view->setVar('errors', $errors);
+        $worker = $this->workerService->getWorker($id);
+        $this->view->setVar('worker', $worker);
+        $this->view->setVar('projects', $this->projectService->getSortedProjects());
+        $this->view->setVar('workerProjects', $worker->getWorkersProjects());
+        $this->view->setVar('workerHistory', $worker->getHistory());
+        $view = $this->view->render('worker', 'assign');
 
         return $this->response->setContent($view->getContent());
     }

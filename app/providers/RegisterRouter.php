@@ -71,6 +71,17 @@ class RegisterRouter implements ServiceProviderInterface
                 'action' => 'beforeEdit',
             ])->setName('beforeEditWorker');
 
+            $worker->add('/assign/{id:[0-9]+}', [
+                'action' => 'assign',
+            ])->via([
+                'POST',
+                'GET'
+            ])->setName('assignWorker');
+
+            $worker->addGet('/assign', [
+                'action' => 'beforeAssign',
+            ])->setName('beforeAssignWorker');
+
             $worker->addGet('/logout', [
                 'action' => 'logout',
             ]);

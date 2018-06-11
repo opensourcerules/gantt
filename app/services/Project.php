@@ -90,4 +90,21 @@ class Project
 
         return $errors;
     }
+
+    /**
+     * Returns all ids of the projects from db as array of string values
+     * @return array
+     */
+    public static function getAllProjectsIds(): array
+    {
+        $projects = Projects::find();
+        $projectsIds = [];
+
+        foreach ($projects as $project) {
+            /** @var $project \GanttDashboard\App\Models\Projects */
+            $projectsIds[] = (string)$project->getId();
+        }
+
+        return $projectsIds;
+    }
 }

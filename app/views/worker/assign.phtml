@@ -1,0 +1,142 @@
+<h3>Assign {{ worker.firstName }} {{ worker.lastName }} to:</h3>
+
+{% set haveErrors = true %}
+
+{% if errors.filter('submit')|length == 1 and errors|length == 1 %}
+
+    {% set haveErrors = false %}
+
+{% endif %}
+
+{% set errorByProjectName =[] %}
+
+{% if haveErrors %}
+
+    {% for error in errors %}
+
+        {% set errorByProjectName[error.getField()] = error.getMessage() %}
+
+    {% endfor %}
+
+{% endif %}
+
+{% set histories = workerHistory.toArray() %}
+{% set reasons = [] %}
+
+{% for history in histories %}
+
+    {% if history['dateEnd'] == null %}
+
+        {% set reasons[history['projectId']] = (history['reason']|json_decode).assign %}
+
+    {% endif %}
+
+{% endfor %}
+
+{% set assignments = workerProjects.toArray() %}
+{% set projectAssigned = [] %}
+
+{% for workerProject in assignments %}
+
+    {% set projectAssigned[workerProject['projectId']] = true %}
+
+{% endfor %}
+
+{{ form(['for': 'assignWorker', 'id': worker.id], 'method': 'post', 'id': 'worker_assign_form') }}
+
+    <div class="container">
+        <div class='form-group'>
+            <div class="row font-weight-bold bg-light border p-2">
+                <div class="col">
+                    Project
+                </div>
+                <div class="col">
+                    Description
+                </div>
+                <div class="col">
+                    Assign by filling in the reason
+                </div>
+            </div>
+            {% set i = 0 %}
+
+            {% for project in projects %}
+                <div class="row border border-top-0 p-1" id="row{{ project.id }}">
+                    <div class="col">
+                        {{ project.name }}
+                    </div>
+                    <div class="col">
+                        {{ project.description }}
+                    </div>
+                    <div class="col">
+
+                        {% if  projectAssigned[project.id] is defined %}
+
+                            {{ text_field('name': project.id, 'id': 'i' ~ project.id, 'disabled': true, 'placeholder': reasons[project.id] ) }}
+                            {{ check_field('name': project.name, 'id': 'check' ~ project.id, 'checked': true, 'disabled': true) }}
+
+                        {% else %}
+
+                            {% if haveErrors %}
+
+                                {{ text_field('name': 'projects['~i~'][reason]', 'id': 'i' ~ project.id, 'placeholder': 'Fill assign reason', 'onkeyup': 'check("' ~ project.id ~ '")', 'value': request.getPost('projects')[i]['reason']) }}
+
+                                {% if request.getPost('projects')[i]['value'] is defined %}
+
+                                    {{ check_field('name': 'projects['~i~'][value]', 'id': 'check' ~ project.id, 'checked': true) }}
+
+                                {% else %}
+
+                                    {{ check_field('name': 'projects['~i~'][value]', 'id': 'check' ~ project.id) }}
+
+                                {% endif %}
+
+                            {% else %}
+
+                                {{ text_field('name': 'projects['~i~'][reason]', 'id': 'i' ~ project.id, 'placeholder': 'Fill assign reason', 'onkeyup': 'check("' ~ project.id ~ '")') }}
+                                {{ check_field('name': 'projects['~i~'][value]', 'id': 'check' ~ project.id) }}
+
+                            {% endif %}
+
+                            {{ text_field('name': 'projects['~i~'][id]', 'id': 'hidden' ~ project.id, 'value':project.id, 'hidden': true) }}
+                            {{ text_field('name': 'projects['~i~'][name]', 'id': 'hidden' ~ project.name, 'value':project.name, 'hidden': true) }}
+                            {% set i = i +1 %}
+
+                        {% endif %}
+
+                    </div>
+                </div>
+
+                {% if errorByProjectName[project.name] is defined %}
+
+                    <div class="row border border-top-0 p-1" id="row{{ project.id }}error">
+                        <div class="col">
+                            <div class='text-danger'>
+                                {{ errorByProjectName[project.name] }}
+                            </div>
+                        </div>
+                    </div>
+
+                {% endif %}
+
+            {% endfor %}
+
+        </div>
+        {% if haveErrors %}
+
+            {% for error in errors.filter('projects') %}
+
+                <div class='text-danger'>
+                   {{ error.getMessage() }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+        <div class='form-group'>
+            {{ submit_button('Assign worker to project(s)', 'class': 'btn btn-primary btn-large', 'name': 'submit') }}
+        </div>
+    </div>
+{{  endform() }}
+
+{{ javascript_include('js/check.js') }}
