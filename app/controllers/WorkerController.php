@@ -124,7 +124,6 @@ class WorkerController extends Controller
 
         $this->view->setVar('errors', $errors);
         $this->view->setVar('worker', $this->workerService->getWorker($id));
-        $this->view->setVar('post', $worker);
         $view = $this->view->render('worker', 'edit');
 
         return $this->response->setContent($view->getContent());

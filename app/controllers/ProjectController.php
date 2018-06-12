@@ -78,7 +78,6 @@ class ProjectController extends Controller
 
         $this->view->setVar('errors', $errors);
         $this->view->setVar('project', $this->projectService->getProject($id));
-        $this->view->setVar('post', $project);
         $view = $this->view->render('project', 'edit');
 
         return $this->response->setContent($view->getContent());

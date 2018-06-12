@@ -22,7 +22,7 @@
                     <div class='controls'>
                         {{ text_field('id', 'class': 'form-control', 'value': worker.id, 'hidden': true) }}
                         {% if haveErrors %}
-                            {{ text_field('lastName', 'class': 'form-control', 'value': post['lastName']) }}
+                            {{ text_field('lastName', 'class': 'form-control', 'value': request.getPost('lastName')) }}
                         {% else %}
                             {{ text_field('lastName', 'class': 'form-control', 'value': worker.lastName) }}
                         {% endif %}
@@ -44,7 +44,7 @@
                     {% endif %}
                     <div class='controls'>
                         {% if haveErrors %}
-                            {{ text_field('firstName', 'class': 'form-control', 'value': post['firstName']) }}
+                            {{ text_field('firstName', 'class': 'form-control', 'value': request.getPost('firstName')) }}
                         {% else %}
                             {{ text_field('firstName', 'class': 'form-control', 'value': worker.firstName) }}
                         {% endif %}
@@ -66,7 +66,7 @@
                     {% endif %}
                     <div class='controls'>
                         {% if haveErrors %}
-                            {{ text_field('email', 'class': 'form-control', 'value': post['email']) }}
+                            {{ text_field('email', 'class': 'form-control', 'value': request.getPost('email')) }}
                         {% else %}
                             {{ text_field('email', 'class': 'form-control', 'value': worker.email) }}
                         {% endif %}
