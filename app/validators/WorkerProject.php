@@ -2,13 +2,12 @@
 
 namespace GanttDashboard\App\Validators;
 
-use Phalcon\Validation;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Message;
 use GanttDashboard\App\Services\Project as ProjectService;
 
 
-class WorkerProject extends Validation
+class WorkerProject extends Base
 {
     /**
      * Constructs the validations
@@ -58,7 +57,7 @@ class WorkerProject extends Validation
                 if ($idReasonName['reason'] !== '') {
                     $messages->appendMessage(
                         new Message(
-                            'Unnecessary reason for unassigned project ' . $name,
+                            'Unnecessary reason for unassigned project: ' . $name,
                             $name
                         )
                     );

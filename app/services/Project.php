@@ -5,7 +5,6 @@ namespace GanttDashboard\App\Services;
 use GanttDashboard\App\Models\Projects;
 use GanttDashboard\App\Validators\Project as ProjectValidator;
 use Phalcon\Mvc\Model\ResultsetInterface;
-use Phalcon\Validation\Message\Group as MessageGroup;
 use Phalcon\Mvc\Model;
 
 class Project
@@ -29,9 +28,9 @@ class Project
      * Registers the project via model in database
      * @param Projects $projectModel
      * @param array $project
-     * @return MessageGroup
+     * @return ProjectValidator
      */
-    public function register(Projects $projectModel, array $project): MessageGroup
+    public function register(Projects $projectModel, array $project): ProjectValidator
     {
         $errors = $this->projectValidator->validate($project);
 
@@ -41,7 +40,7 @@ class Project
             $projectModel->create();
         }
 
-        return $errors;
+        return $this->projectValidator;
     }
 
     /**
@@ -73,9 +72,9 @@ class Project
     /**
      * Updates the project via model in database
      * @param array $projectUpdate
-     * @return MessageGroup
+     * @return ProjectValidator
      */
-    public function edit(array $projectUpdate): MessageGroup
+    public function edit(array $projectUpdate): ProjectValidator
     {
         $errors = $this->projectValidator->validate($projectUpdate);
 
@@ -88,7 +87,7 @@ class Project
             $project->update();
         }
 
-        return $errors;
+        return $this->projectValidator;
     }
 
     /**
@@ -106,15 +105,5 @@ class Project
         }
 
         return $projectsIds;
-    }
-
-    /**
-     * Returns true if there are other than submit type errors
-     * @param MessageGroup $errors
-     * @return bool
-     */
-    public function hasErrors(MessageGroup $errors): bool
-    {
-        return $this->projectValidator->hasErrors($errors);
     }
 }

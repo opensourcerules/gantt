@@ -2,15 +2,13 @@
 
 namespace GanttDashboard\App\Validators;
 
-use Phalcon\Validation;
 use Phalcon\Validation\Validator\Email;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Uniqueness;
 use Phalcon\Validation\Validator\Callback;
 use GanttDashboard\App\Models\Workers;
-use Phalcon\Validation\Message\Group as MessageGroup;
 
-class Worker extends Validation
+class Worker extends Base
 {
     /**
      * Constructs the validations for model
@@ -75,19 +73,5 @@ class Worker extends Validation
                 }
             ])
         );
-    }
-
-    /**
-     * Returns true if there are other than submit type errors
-     * @param MessageGroup $errors
-     * @return bool
-     */
-    public function hasErrors(MessageGroup $errors): bool
-    {
-        if (count($errors->filter('submit')) == 1 && $errors->count() == 1) {
-            return false;
-        }
-
-        return true;
     }
 }

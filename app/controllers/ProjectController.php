@@ -30,7 +30,8 @@ class ProjectController extends Controller
     public function registerAction(): ResponseInterface
     {
         $project = $this->request->getPost();
-        $errors = $this->projectService->register(new Projects(), $project);
+        $validator = $this->projectService->register(new Projects(), $project);
+        $errors = $validator->getMessages();
 
         if (0 == $errors->count()) {
             $this->flashSession->success('Project registration successful');
@@ -39,7 +40,7 @@ class ProjectController extends Controller
             return $this->response->redirect(['for' => 'registerProject']);
         }
 
-        $this->view->setVar('hasErrors', $this->projectService->hasErrors($errors));
+        $this->view->setVar('hasErrors', $validator->hasErrors());
         $this->view->setVar('errors', $errors);
         $view = $this->view->render('project', 'register');
 
@@ -68,7 +69,8 @@ class ProjectController extends Controller
     public function editAction(int $id): ResponseInterface
     {
         $project = $this->request->getPost();
-        $errors = $this->projectService->edit($project);
+        $validator = $this->projectService->edit($project);
+        $errors = $validator->getMessages();
 
         if (0 == $errors->count()) {
             $this->flashSession->success('Project update successful');
@@ -77,7 +79,7 @@ class ProjectController extends Controller
             return $this->response->redirect(['for' => 'beforeEditProject']);
         }
 
-        $this->view->setVar('hasErrors', $this->projectService->hasErrors($errors));
+        $this->view->setVar('hasErrors', $validator->hasErrors());
         $this->view->setVar('errors', $errors);
         $this->view->setVar('project', $this->projectService->getProject($id));
         $view = $this->view->render('project', 'edit');
