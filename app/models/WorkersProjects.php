@@ -27,7 +27,7 @@ class WorkersProjects extends Model
     {
         $this->belongsTo(
             'worker_id',
-            'GanttDashboard\App\Models\Workers',
+            Workers::class,
             'id',
             ['alias' => 'Workers']
 
@@ -35,7 +35,7 @@ class WorkersProjects extends Model
 
         $this->belongsTo(
             'project_id',
-            'GanttDashboard\App\Models\Projects',
+            Projects::class,
             'id',
             ['alias' => 'Projects']
         );

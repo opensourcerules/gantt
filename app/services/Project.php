@@ -107,4 +107,14 @@ class Project
 
         return $projectsIds;
     }
+
+    /**
+     * Returns true if there are other than submit type errors
+     * @param MessageGroup $errors
+     * @return bool
+     */
+    public function hasErrors(MessageGroup $errors): bool
+    {
+        return $this->projectValidator->hasErrors($errors);
+    }
 }

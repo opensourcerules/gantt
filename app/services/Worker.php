@@ -99,6 +99,16 @@ class Worker
     }
 
     /**
+     * Returns true if there are other than submit type errors
+     * @param MessageGroup $errors
+     * @return bool
+     */
+    public function hasErrors(MessageGroup $errors): bool
+    {
+        return $this->workerValidator->hasErrors($errors);
+    }
+
+    /**
      * Updates the worker via model in database
      * @param array $workerUpdate
      * @return MessageGroup
@@ -130,12 +140,17 @@ class Worker
     {
         $errors = $this->workerProjectValidator->validate($assignments);
 
-        if (0 == $errors->count()) {
-            foreach ($assignments['projects'] as $project) {
-                if (true == isset($project['value']) &&
-                    true === $this->workerProjectService->add($workerId, $project['id'])) {
-                    $this->historyService->add($workerId, $project['id'], $project['reason']);
-                }
+        if ($errors->count() > 0) {
+            return $errors;
+        }
+
+        foreach ($assignments['projects'] as $project) {
+            if (false == isset($project['value'])) {
+                continue;
+            }
+
+            if (true === $this->workerProjectService->add($workerId, $project['id'])) {
+                $this->historyService->add($workerId, $project['id'], $project['reason']);
             }
         }
 

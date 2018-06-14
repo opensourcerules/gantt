@@ -39,6 +39,7 @@ class ProjectController extends Controller
             return $this->response->redirect(['for' => 'registerProject']);
         }
 
+        $this->view->setVar('hasErrors', $this->projectService->hasErrors($errors));
         $this->view->setVar('errors', $errors);
         $view = $this->view->render('project', 'register');
 
@@ -76,6 +77,7 @@ class ProjectController extends Controller
             return $this->response->redirect(['for' => 'beforeEditProject']);
         }
 
+        $this->view->setVar('hasErrors', $this->projectService->hasErrors($errors));
         $this->view->setVar('errors', $errors);
         $this->view->setVar('project', $this->projectService->getProject($id));
         $view = $this->view->render('project', 'edit');

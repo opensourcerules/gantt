@@ -7,6 +7,7 @@ use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Uniqueness;
 use Phalcon\Validation\Validator\Callback;
 use GanttDashboard\App\Models\Projects;
+use Phalcon\Validation\Message\Group as MessageGroup;
 
 class Project extends Validation
 {
@@ -51,5 +52,19 @@ class Project extends Validation
                 }
             ])
         );
+    }
+
+    /**
+     * Returns true if there are other than submit type errors
+     * @param MessageGroup $errors
+     * @return bool
+     */
+    public function hasErrors(MessageGroup $errors): bool
+    {
+        if (count($errors->filter('submit')) == 1 && $errors->count() == 1) {
+            return false;
+        }
+
+        return true;
     }
 }

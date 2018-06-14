@@ -27,7 +27,7 @@ class WorkerController extends Controller
     private $authenticationService;
 
     /**
-     * Initializes the worker service and authentication service
+     * Initializes the services
      * @return void
      */
     public function onConstruct(): void
@@ -85,6 +85,7 @@ class WorkerController extends Controller
             return $this->response->redirect(['for' => 'registerWorker']);
         }
 
+        $this->view->setVar('hasErrors', $this->workerService->hasErrors($errors));
         $this->view->setVar('errors', $errors);
         $view = $this->view->render('worker', 'register');
 
@@ -122,6 +123,7 @@ class WorkerController extends Controller
             return $this->response->redirect(['for' => 'beforeEditWorker']);
         }
 
+        $this->view->setVar('hasErrors', $this->workerService->hasErrors($errors));
         $this->view->setVar('errors', $errors);
         $this->view->setVar('worker', $this->workerService->getWorker($id));
         $view = $this->view->render('worker', 'edit');
@@ -160,6 +162,7 @@ class WorkerController extends Controller
             return $this->response->redirect(['for' => 'beforeAssignWorker']);
         }
 
+        $this->view->setVar('hasErrors', $this->workerService->hasErrors($errors));
         $this->view->setVar('errors', $errors);
         $worker = $this->workerService->getWorker($id);
         $this->view->setVar('worker', $worker);

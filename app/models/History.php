@@ -57,14 +57,14 @@ class History extends Model
     {
         $this->belongsTo(
             'workerId',
-            'Workers',
+            Workers::class,
             'id',
             ['alias' => 'Workers']
         );
 
         $this->belongsTo(
             'projectId',
-            'Projects',
+            Projects::class,
             'id',
             ['alias' => 'Projects']
         );
