@@ -27,7 +27,7 @@ class WorkerController extends Controller
     private $authenticationService;
 
     /**
-     * Initializes the worker service and authentication service
+     * Initializes the services
      * @return void
      */
     public function onConstruct(): void
@@ -76,7 +76,8 @@ class WorkerController extends Controller
     public function registerAction(): ResponseInterface
     {
         $worker = $this->request->getPost();
-        $errors = $this->workerService->register(new Workers(), $worker);
+        $validator = $this->workerService->register(new Workers(), $worker);
+        $errors = $validator->getMessages();
 
         if (0 == $errors->count()) {
             $this->flashSession->success('Worker registration successful');
@@ -85,6 +86,7 @@ class WorkerController extends Controller
             return $this->response->redirect(['for' => 'registerWorker']);
         }
 
+        $this->view->setVar('hasErrors', $validator->hasErrors());
         $this->view->setVar('errors', $errors);
         $view = $this->view->render('worker', 'register');
 
@@ -113,7 +115,8 @@ class WorkerController extends Controller
     public function editAction(int $id): ResponseInterface
     {
         $worker = $this->request->getPost();
-        $errors = $this->workerService->edit($worker);
+        $validator = $this->workerService->edit($worker);
+        $errors = $validator->getMessages();
 
         if (0 == $errors->count()) {
             $this->flashSession->success('Worker update successful');
@@ -122,6 +125,7 @@ class WorkerController extends Controller
             return $this->response->redirect(['for' => 'beforeEditWorker']);
         }
 
+        $this->view->setVar('hasErrors', $validator->hasErrors());
         $this->view->setVar('errors', $errors);
         $this->view->setVar('worker', $this->workerService->getWorker($id));
         $view = $this->view->render('worker', 'edit');
@@ -151,7 +155,8 @@ class WorkerController extends Controller
     public function assignAction(int $id): ResponseInterface
     {
         $assignments = $this->request->getPost();
-        $errors = $this->workerService->assign($id, $assignments);
+        $validator = $this->workerService->assign($id, $assignments);
+        $errors = $validator->getMessages();
 
         if (0 == $errors->count()) {
             $this->flashSession->success('Worker assign successful');
@@ -160,6 +165,7 @@ class WorkerController extends Controller
             return $this->response->redirect(['for' => 'beforeAssignWorker']);
         }
 
+        $this->view->setVar('hasErrors', $validator->hasErrors());
         $this->view->setVar('errors', $errors);
         $worker = $this->workerService->getWorker($id);
         $this->view->setVar('worker', $worker);

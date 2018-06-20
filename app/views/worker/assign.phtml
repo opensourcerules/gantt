@@ -1,16 +1,8 @@
 <h3>Assign {{ worker.firstName }} {{ worker.lastName }} to:</h3>
 
-{% set haveErrors = true %}
-
-{% if errors.filter('submit')|length == 1 and errors|length == 1 %}
-
-    {% set haveErrors = false %}
-
-{% endif %}
-
 {% set errorByProjectName =[] %}
 
-{% if haveErrors %}
+{% if hasErrors %}
 
     {% for error in errors %}
 
@@ -20,25 +12,23 @@
 
 {% endif %}
 
-{% set histories = workerHistory.toArray() %}
 {% set reasons = [] %}
 
-{% for history in histories %}
+{% for history in workerHistory %}
 
-    {% if history['dateEnd'] == null %}
+    {% if history.getDateEnd() === null %}
 
-        {% set reasons[history['projectId']] = (history['reason']|json_decode).assign %}
+        {% set reasons[history.getProjectId()] = (history.getReason()|json_decode).assign %}
 
     {% endif %}
 
 {% endfor %}
 
-{% set assignments = workerProjects.toArray() %}
 {% set projectAssigned = [] %}
 
-{% for workerProject in assignments %}
+{% for workerProject in workerProjects %}
 
-    {% set projectAssigned[workerProject['projectId']] = true %}
+    {% set projectAssigned[workerProject.getProjectId()] = true %}
 
 {% endfor %}
 
@@ -76,7 +66,7 @@
 
                         {% else %}
 
-                            {% if haveErrors %}
+                            {% if hasErrors %}
 
                                 {{ text_field('name': 'projects['~i~'][reason]', 'id': 'i' ~ project.id, 'placeholder': 'Fill assign reason', 'onkeyup': 'check("' ~ project.id ~ '")', 'value': request.getPost('projects')[i]['reason']) }}
 
@@ -121,7 +111,7 @@
             {% endfor %}
 
         </div>
-        {% if haveErrors %}
+        {% if hasErrors %}
 
             {% for error in errors.filter('projects') %}
 

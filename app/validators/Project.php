@@ -2,13 +2,12 @@
 
 namespace GanttDashboard\App\Validators;
 
-use Phalcon\Validation;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Uniqueness;
 use Phalcon\Validation\Validator\Callback;
 use GanttDashboard\App\Models\Projects;
 
-class Project extends Validation
+class Project extends Base
 {
     /**
      * Constructs the validations for model

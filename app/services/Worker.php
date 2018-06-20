@@ -5,7 +5,6 @@ namespace GanttDashboard\App\Services;
 use GanttDashboard\App\Models\Workers;
 use GanttDashboard\App\Validators\Worker as WorkerValidator;
 use Phalcon\Mvc\Model\ResultsetInterface;
-use Phalcon\Validation\Message\Group as MessageGroup;
 use Phalcon\Mvc\Model;
 use GanttDashboard\App\Services\WorkerProject as WorkerProjectService;
 use GanttDashboard\App\Services\History as HistoryService;
@@ -56,9 +55,9 @@ class Worker
      * Registers the worker via model in database
      * @param Workers $workerModel
      * @param array $worker
-     * @return MessageGroup
+     * @return WorkerValidator
      */
-    public function register(Workers $workerModel, array $worker): MessageGroup
+    public function register(Workers $workerModel, array $worker): WorkerValidator
     {
         $errors = $this->workerValidator->validate($worker);
 
@@ -69,7 +68,7 @@ class Worker
             $workerModel->create();
         }
 
-        return $errors;
+        return $this->workerValidator;
     }
 
     /**
@@ -86,7 +85,7 @@ class Worker
     /**
      * Gets worker from database via model
      * @param int $id
-     * @return Model
+     * @return Workers
      */
     public function getWorker(int $id): Model
     {
@@ -101,9 +100,9 @@ class Worker
     /**
      * Updates the worker via model in database
      * @param array $workerUpdate
-     * @return MessageGroup
+     * @return WorkerValidator
      */
-    public function edit(array $workerUpdate): MessageGroup
+    public function edit(array $workerUpdate): WorkerValidator
     {
         $errors = $this->workerValidator->validate($workerUpdate);
 
@@ -117,28 +116,33 @@ class Worker
             $worker->update();
         }
 
-        return $errors;
+        return $this->workerValidator;
     }
 
     /**
      * Assigns the worker via models in database
      * @param int $workerId
      * @param array $assignments
-     * @return MessageGroup
+     * @return WorkerProjectValidator
      */
-    public function assign(int $workerId, array $assignments): MessageGroup
+    public function assign(int $workerId, array $assignments): WorkerProjectValidator
     {
         $errors = $this->workerProjectValidator->validate($assignments);
 
-        if (0 == $errors->count()) {
-            foreach ($assignments['projects'] as $project) {
-                if (true == isset($project['value']) &&
-                    true === $this->workerProjectService->add($workerId, $project['id'])) {
-                    $this->historyService->add($workerId, $project['id'], $project['reason']);
-                }
+        if ($errors->count() > 0) {
+            return $this->workerProjectValidator;
+        }
+
+        foreach ($assignments['projects'] as $project) {
+            if (false == isset($project['value'])) {
+                continue;
+            }
+
+            if (true === $this->workerProjectService->add($workerId, $project['id'])) {
+                $this->historyService->add($workerId, $project['id'], $project['reason']);
             }
         }
 
-        return $errors;
+        return $this->workerProjectValidator;
     }
 }

@@ -43,24 +43,24 @@ class Workers extends Model
     {
         $this->hasMany(
             'id',
-            'GanttDashboard\App\Models\WorkersProjects',
+            WorkersProjects::class,
             'workerId',
             ['alias' => 'WorkersProjects']
         );
 
         $this->hasManyToMany(
             'id',
-            'GanttDashboard\App\Models\WorkersProjects',
+            WorkersProjects::class,
             'workerId',
             'projectId',
-            'GanttDashboard\App\Models\Projects',
+            Projects::class,
             'id',
             ['alias' => 'Projects']
         );
 
         $this->hasMany(
             'id',
-            'GanttDashboard\App\Models\History',
+            History::class,
             'workerId',
             ['alias' => 'History']
         );
