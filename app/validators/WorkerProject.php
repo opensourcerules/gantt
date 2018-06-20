@@ -6,6 +6,10 @@ use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Message;
 use GanttDashboard\App\Services\Project as ProjectService;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 0b82754602349e9e1403d619afd3bd5bd3f31fb0
 class WorkerProject extends Base
 {
     /**
@@ -48,10 +52,17 @@ class WorkerProject extends Base
 
             return;
         }
+<<<<<<< HEAD
 
         foreach ($data['projects'] as $key => $idReasonName) {
             $name = $idReasonName['name'];
 
+=======
+
+        foreach ($data['projects'] as $key => $idReasonName) {
+            $name = $idReasonName['name'];
+
+>>>>>>> 0b82754602349e9e1403d619afd3bd5bd3f31fb0
             if (false === isset($idReasonName['value'])) {
                 if ($idReasonName['reason'] !== '') {
                     $messages->appendMessage(
@@ -63,6 +74,7 @@ class WorkerProject extends Base
                 }
 
                 continue;
+<<<<<<< HEAD
             }
 
             if (false === isset($idReasonName['reason'])) {
@@ -106,6 +118,51 @@ class WorkerProject extends Base
             if (false === in_array($idReasonName['id'], $allRegisteredProjectsIds, true)) {
                 $messages->appendMessage(
                     new Message(
+=======
+            }
+
+            if (false === isset($idReasonName['reason'])) {
+                $messages->appendMessage(
+                    new Message(
+                        'The field projects[' . $key . '][reason] is missing for unassigned project number ' .
+                        ($key + 1) . ' from the table',
+                        $name
+                    )
+                );
+            }
+
+            if (false === isset($idReasonName['id'])) {
+                $messages->appendMessage(
+                    new Message(
+                        'The field projects[' . $key . '][id] is missing for unassigned project number ' .
+                        ($key + 1) . ' from the table',
+                        $name
+                    )
+                );
+            }
+
+            if ($idReasonName['reason'] === '') {
+                $messages->appendMessage(
+                    new Message(
+                        'Missing reason for project: ' . $name,
+                        $name
+                    )
+                );
+            }
+
+            if (strlen($idReasonName['reason']) > 255) {
+                $messages->appendMessage(
+                    new Message(
+                        'Reason must be at most 255 characters long for project: ' . $name,
+                        $name
+                    )
+                );
+            }
+
+            if (false === in_array($idReasonName['id'], $allRegisteredProjectsIds, true)) {
+                $messages->appendMessage(
+                    new Message(
+>>>>>>> 0b82754602349e9e1403d619afd3bd5bd3f31fb0
                         'Unregistered project id: ' . $idReasonName['id']  . 'for project:' . $name,
                         $name
                     )
