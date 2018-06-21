@@ -20,9 +20,4 @@ class Base extends Validation
 
         return true;
     }
-<<<<<<< HEAD
 }
-=======
-
-}
->>>>>>> 0b82754602349e9e1403d619afd3bd5bd3f31fb0
