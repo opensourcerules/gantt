@@ -87,7 +87,7 @@ class Worker
      * @param int $id
      * @return Workers
      */
-    public function getWorker(int $id): Model
+    public function getWorker(int $id): Workers
     {
         return Workers::findFirst([
             'id = :id:',
