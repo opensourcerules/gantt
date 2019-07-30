@@ -30,6 +30,36 @@ class Projects extends Model
     protected $description;
 
     /**
+     * Initializes the relations between tables
+     */
+    public function initialize()
+    {
+        $this->hasMany(
+            'id',
+            WorkersProjects::class,
+            'projectId',
+            ['alias' => 'WorkersProjects']
+        );
+
+        $this->hasManyToMany(
+            'id',
+            WorkersProjects::class,
+            'projectId',
+            'workerId',
+            Workers::class,
+            'id',
+            ['alias' => 'Workers']
+        );
+
+        $this->hasMany(
+            'id',
+            History::class,
+            'projectId',
+            ['alias' => 'History']
+        );
+    }
+
+    /**
      * Method to set the value of field name
      *
      * @param string $name
@@ -94,8 +124,8 @@ class Projects extends Model
     public function columnMap(): array
     {
         return [
-            'id' => 'id',
-            'name' => 'name',
+            'id'          => 'id',
+            'name'        => 'name',
             'description' => 'description'
         ];
     }

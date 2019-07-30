@@ -1,4 +1,4 @@
-<h3 class='p-4'>Choose worker to edit</h3>
+<h3 class='p-4'>Choose worker to assign</h3>
 
 <div class="container">
 
@@ -14,18 +14,20 @@
         </div>
     </div>
 
-{% for worker in workers %}
+    {% for worker in workers %}
+
         <div class="row border border-top-0 p-1">
             <div class="col">
-                {{ link_to(['for': 'editWorker', 'id': worker.id], worker.firstName, 'class': 'text-dark') }}
+                {{ link_to(['for': 'assignWorker', 'id': worker.id], worker.firstName, 'class': 'text-dark') }}
             </div>
             <div class="col">
-                {{ link_to(['for': 'editWorker', 'id': worker.id], worker.lastName, 'class': 'text-dark') }}
+                {{ link_to(['for': 'assignWorker', 'id': worker.id], worker.lastName, 'class': 'text-dark') }}
             </div>
             <div class="col">
-                {{ link_to(['for': 'editWorker', 'id': worker.id], worker.email, 'class': 'text-dark') }}
+                {{ link_to(['for': 'assignWorker', 'id': worker.id], worker.email, 'class': 'text-dark') }}
             </div>
         </div>
-{% endfor %}
+
+    {% endfor %}
 
 </div>

@@ -2,13 +2,12 @@
 
 namespace GanttDashboard\App\Validators;
 
-use Phalcon\Validation;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Uniqueness;
 use Phalcon\Validation\Validator\Callback;
 use GanttDashboard\App\Models\Projects;
 
-class Project extends Validation
+class Project extends Base
 {
     /**
      * Constructs the validations for model
@@ -23,16 +22,12 @@ class Project extends Validation
         );
 
         $this->add(
-            'name',
+            ['name', 'description'],
             new PresenceOf([
-                'message' => 'The name is required.',
-            ])
-        );
-
-        $this->add(
-            'description',
-            new PresenceOf([
-                'message' => 'The description is required.',
+                'message' => [
+                    'name' => 'The name is required.',
+                    'description' => 'The description is required.'
+                    ],
             ])
         );
 

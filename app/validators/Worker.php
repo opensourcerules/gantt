@@ -2,14 +2,13 @@
 
 namespace GanttDashboard\App\Validators;
 
-use Phalcon\Validation;
 use Phalcon\Validation\Validator\Email;
 use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Validator\Uniqueness;
 use Phalcon\Validation\Validator\Callback;
 use GanttDashboard\App\Models\Workers;
 
-class Worker extends Validation
+class Worker extends Base
 {
     /**
      * Constructs the validations for model
@@ -24,23 +23,13 @@ class Worker extends Validation
         );
 
         $this->add(
-            'firstName',
+            ['firstName', 'lastName', 'email'],
             new PresenceOf([
-                'message' => 'The First Name is required.',
-            ])
-        );
-
-        $this->add(
-            'lastName',
-            new PresenceOf([
-                'message' => 'The Last Name is required.',
-            ])
-        );
-
-        $this->add(
-            'email',
-            new PresenceOf([
-                'message' => 'The e-mail is required.',
+                'message' => [
+                    'firstName' => 'The First Name is required.',
+                    'lastName' => 'The Last Name is required.',
+                    'email' => 'The e-mail is required.'
+                    ]
             ])
         );
 

@@ -1,9 +1,4 @@
-<h3>Edit project</h3>
-
-{% set haveErrors = true %}
-{% if errors.filter('submit')|length == 1 and errors|length == 1 %}
-    {% set haveErrors = false %}
-{% endif %}
+<h3 class='p-4'>Edit project</h3>
 
 {{ form(['for': 'editProject', 'id': project.id], 'method': 'post', 'id': 'project_edit_form') }}
 
@@ -12,7 +7,7 @@
             <label for='name'>Name</label>
             <div class='row justify-content-center'>
                 <div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>
-                    {% if haveErrors and errors.filter('name')|length > 0 %}
+                    {% if hasErrors and errors.filter('name')|length > 0 %}
                     <div class='text-danger'>
                         {% for index, error in errors.filter('name') %}
                             {{ error.getMessage() }}
@@ -21,8 +16,8 @@
                     {% endif %}
                     <div class='controls'>
                         {{ text_field('id', 'class': 'form-control', 'value': project.id, 'hidden': true) }}
-                        {% if haveErrors %}
-                            {{ text_field('name', 'class': 'form-control', 'value': post['name']) }}
+                        {% if hasErrors %}
+                            {{ text_field('name', 'class': 'form-control', 'value': request.getPost('name')) }}
                         {% else %}
                             {{ text_field('name', 'class': 'form-control', 'value': project.name) }}
                         {% endif %}
@@ -35,7 +30,7 @@
             <label for='description'>Description</label>
             <div class='row justify-content-center'>
                 <div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>
-                    {% if haveErrors == 1 and  errors.filter('description')|length > 0 %}
+                    {% if hasErrors == 1 and  errors.filter('description')|length > 0 %}
                     <div class='text-danger'>
                         {% for index, error in errors.filter('description') %}
                             {{ error.getMessage() }}
@@ -43,8 +38,8 @@
                     </div>
                     {% endif %}
                     <div class='controls'>
-                        {% if haveErrors %}
-                            {{ text_field('description', 'class': 'form-control', 'value': post['description']) }}
+                        {% if hasErrors %}
+                            {{ text_field('description', 'class': 'form-control', 'value': request.getPost('description')) }}
                         {% else %}
                             {{ text_field('description', 'class': 'form-control', 'value': project.description) }}
                         {% endif %}

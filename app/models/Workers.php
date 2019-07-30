@@ -37,6 +37,36 @@ class Workers extends Model
     protected $email;
 
     /**
+     * Initializes the relations between tables
+     */
+    public function initialize()
+    {
+        $this->hasMany(
+            'id',
+            WorkersProjects::class,
+            'workerId',
+            ['alias' => 'WorkersProjects']
+        );
+
+        $this->hasManyToMany(
+            'id',
+            WorkersProjects::class,
+            'workerId',
+            'projectId',
+            Projects::class,
+            'id',
+            ['alias' => 'Projects']
+        );
+
+        $this->hasMany(
+            'id',
+            History::class,
+            'workerId',
+            ['alias' => 'History']
+        );
+    }
+
+    /**
      * Method to set the value of field lastName
      *
      * @param string $lastName
@@ -124,10 +154,10 @@ class Workers extends Model
     public function columnMap(): array
     {
         return [
-            'id' => 'id',
-            'last_name' => 'lastName',
+            'id'         => 'id',
+            'last_name'  => 'lastName',
             'first_name' => 'firstName',
-            'email' => 'email'
+            'email'      => 'email'
         ];
     }
 }

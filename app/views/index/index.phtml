@@ -1,1 +1,120 @@
-<h3>Actual assignments</h3>
+{% if assignments.count() > 0 %}
+    <h3 class='p-4'>Actual assignments</h3>
+
+    <div class="container">
+
+        <div class="row font-weight-bold bg-light border p-2">
+            <div class="col">
+                First Name
+            </div>
+            <div class="col">
+                Last Name
+            </div>
+            <div class="col">
+                Email
+            </div>
+            <div class="col">
+                Project Name
+            </div>
+            <div class="col">
+                Assign Date
+            </div>
+            <div class="col">
+                Reason
+            </div>
+        </div>
+
+        {% for assignment in assignments %}
+
+        <div class="row border border-top-0 p-1">
+            <div class="col">
+                {{ assignment.firstName }}
+            </div>
+            <div class="col">
+                {{ assignment.lastName }}
+            </div>
+            <div class="col">
+                {{ assignment.email }}
+            </div>
+            <div class="col">
+                {{ assignment.name }}
+            </div>
+            <div class="col">
+                {{ date("d-m-Y h:i:s", assignment.dateStart) }}
+            </div>
+            <div class="col">
+                {{ (assignment.reason|json_decode).assign }}
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+{% endif %}
+
+{% if unAssignedWorkers.count() > 0 %}
+<h3 class='p-4'>Unassigned Workers</h3>
+
+<div class="container">
+
+    <div class="row font-weight-bold bg-light border p-2">
+        <div class="col">
+            First Name
+        </div>
+        <div class="col">
+            Last Name
+        </div>
+        <div class="col">
+            Email
+        </div>
+    </div>
+
+    {% for unAssignedWorker in unAssignedWorkers %}
+
+    <div class="row border border-top-0 p-1">
+        <div class="col">
+            {{ unAssignedWorker.firstName }}
+        </div>
+        <div class="col">
+            {{ unAssignedWorker.lastName }}
+        </div>
+        <div class="col">
+            {{ unAssignedWorker.email }}
+        </div>
+    </div>
+
+    {% endfor %}
+
+</div>
+{% endif %}
+
+{% if unAssignedProjects.count() > 0 %}
+<h3 class='p-4'>Unassigned Projects</h3>
+
+<div class="container">
+
+    <div class="row font-weight-bold bg-light border p-2">
+        <div class="col">
+            Project Name
+        </div>
+        <div class="col">
+            Project Description
+        </div>
+    </div>
+
+    {% for unAssignedProject in unAssignedProjects %}
+
+    <div class="row border border-top-0 p-1">
+        <div class="col">
+            {{ unAssignedProject.name }}
+        </div>
+        <div class="col">
+            {{ unAssignedProject.name }}
+        </div>
+    </div>
+
+    {% endfor %}
+
+</div>
+{% endif %}

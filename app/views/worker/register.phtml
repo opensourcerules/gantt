@@ -1,9 +1,4 @@
-<h3>Register worker</h3>
-
-{% set haveErrors = true %}
-{% if errors.filter('submit')|length == 1 and errors|length == 1 %}
-{% set haveErrors = false %}
-{% endif %}
+<h3 class='p-4'>Register worker</h3>
 
 {{ form('worker/register', 'method': 'post') }}
 <fieldset>
@@ -11,7 +6,7 @@
         <label for='lastName'>Last name</label>
         <div class='row justify-content-center'>
             <div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>
-                {% if haveErrors and errors.filter('lastName')|length > 0 %}
+                {% if hasErrors and errors.filter('lastName')|length > 0 %}
                     <div class='text-danger'>
                         {% for index, error in errors.filter('lastName') %}
                             {{ error.getMessage() }}
@@ -29,7 +24,7 @@
         <label for='firstName'>First name</label>
         <div class='row justify-content-center'>
             <div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>
-                {% if haveErrors == 1 and  errors.filter('firstName')|length > 0 %}
+                {% if hasErrors == 1 and  errors.filter('firstName')|length > 0 %}
                     <div class='text-danger'>
                         {% for index, error in errors.filter('firstName') %}
                             {{ error.getMessage() }}
@@ -47,7 +42,7 @@
         <label for='email'>Email</label>
         <div class='row justify-content-center'>
             <div class='col-xs-12 col-sm-6 col-md-4 col-lg-3'>
-                {% if haveErrors and  errors.filter('email')|length > 0 %}
+                {% if hasErrors and  errors.filter('email')|length > 0 %}
                     <div class='text-danger'>
                         {% for index, error in errors.filter('email') %}
                             {{ error.getMessage() }}
