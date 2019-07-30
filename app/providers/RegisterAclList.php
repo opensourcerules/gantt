@@ -32,11 +32,16 @@ class RegisterAclList implements ServiceProviderInterface
             $acl->addRole(new Role(self::ADMIN));
 
             $acl->addResource(new Resource('Worker'), [
-                'beforeEdit',
-                'edit',
-                'register',
-                'logout',
                 'login',
+                'beforeHistory',
+                'history'
+            ]);
+            $acl->addResource(new Resource('Project'), [
+                'beforeHistory',
+                'history'
+            ]);
+            $acl->addResource(new Resource('History'), [
+                'index'
             ]);
             $acl->addResource(new Resource('Index'), [
                 'index',
@@ -44,6 +49,11 @@ class RegisterAclList implements ServiceProviderInterface
             ]);
 
             $acl->allow(self::GUEST, 'Worker', 'login');
+            $acl->allow(self::GUEST, 'Worker', 'beforeHistory');
+            $acl->allow(self::GUEST, 'Worker', 'history');
+            $acl->allow(self::GUEST, 'Project', 'beforeHistory');
+            $acl->allow(self::GUEST, 'Project', 'history');
+            $acl->allow(self::GUEST, 'History', 'index');
             $acl->allow(self::GUEST, 'Index', 'index');
             $acl->allow(self::GUEST, 'Index', 'notFound');
 
