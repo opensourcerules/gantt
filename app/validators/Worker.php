@@ -23,23 +23,13 @@ class Worker extends Base
         );
 
         $this->add(
-            'firstName',
+            ['firstName', 'lastName', 'email'],
             new PresenceOf([
-                'message' => 'The First Name is required.',
-            ])
-        );
-
-        $this->add(
-            'lastName',
-            new PresenceOf([
-                'message' => 'The Last Name is required.',
-            ])
-        );
-
-        $this->add(
-            'email',
-            new PresenceOf([
-                'message' => 'The e-mail is required.',
+                'message' => [
+                    'firstName' => 'The First Name is required.',
+                    'lastName' => 'The Last Name is required.',
+                    'email' => 'The e-mail is required.'
+                    ]
             ])
         );
 

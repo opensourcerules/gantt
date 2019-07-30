@@ -82,6 +82,28 @@ class RegisterRouter implements ServiceProviderInterface
                 'action' => 'beforeAssign',
             ])->setName('beforeAssignWorker');
 
+            $worker->add('/history/{id:[0-9]+}', [
+                'action' => 'history',
+            ])->via([
+                'POST',
+                'GET'
+            ])->setName('historyWorker');
+
+            $worker->addGet('/history', [
+                'action' => 'beforeHistory',
+            ])->setName('beforeHistoryWorker');
+            
+            $worker->add('/unassign/{id:[0-9]+}', [
+                'action' => 'unAssign',
+            ])->via([
+                'POST',
+                'GET'
+            ])->setName('unAssignWorker');
+
+            $worker->addGet('/unassign', [
+                'action' => 'beforeUnAssign',
+            ])->setName('beforeUnAssignWorker');
+
             $worker->addGet('/logout', [
                 'action' => 'logout',
             ]);
@@ -119,7 +141,36 @@ class RegisterRouter implements ServiceProviderInterface
                 'action' => 'beforeEdit',
             ])->setName('beforeEditProject');
 
+            $project->add('/history/{id:[0-9]+}', [
+                'action' => 'history',
+            ])->via([
+                'POST',
+                'GET'
+            ])->setName('historyProject');
+
+            $project->addGet('/history', [
+                'action' => 'beforeHistory',
+            ])->setName('beforeHistoryProject');
+
             $router->mount($project);
+
+            /**
+             * Create a group with a History controller
+             */
+            $history = new RouterGroup([
+                'controller' => 'History',
+            ]);
+
+            $history->setPrefix('/history');
+
+            $history->add('', [
+                'action' => 'index',
+            ])->via([
+                'POST',
+                'GET'
+            ])->setName('indexHistory');
+
+            $router->mount($history);
 
             return $router;
         });

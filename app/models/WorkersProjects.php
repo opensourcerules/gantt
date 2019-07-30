@@ -30,7 +30,6 @@ class WorkersProjects extends Model
             Workers::class,
             'id',
             ['alias' => 'Workers']
-
         );
 
         $this->belongsTo(

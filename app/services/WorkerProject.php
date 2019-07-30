@@ -20,4 +20,25 @@ class WorkerProject
 
         return $workersProjects->create();
     }
+
+    /**
+     * Deletes the $workerId - $projectId pair into db via model
+     * @param int $workerId
+     * @param int $projectId
+     * @return bool
+     */
+    public function remove(int $workerId, int $projectId): bool
+    {
+        $workerProject = WorkersProjects::find([
+            'conditions' => 'workerId = ?1 and projectId = ?2',
+            'bind'       => [
+                1 => $workerId,
+                2 => $projectId
+            ]
+        ]);
+
+        /** @var $workerProject WorkersProjects */
+
+        return $workerProject->delete();
+    }
 }

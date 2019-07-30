@@ -6,6 +6,8 @@ use Phalcon\Mvc\Controller;
 use GanttDashboard\App\Services\Project as ProjectService;
 use GanttDashboard\App\Models\Projects;
 use Phalcon\Http\ResponseInterface;
+use GanttDashboard\App\Validators\DateInterval as DateValidator;
+use GanttDashboard\App\Services\History as HistoryService;
 
 class ProjectController extends Controller
 {
@@ -15,12 +17,25 @@ class ProjectController extends Controller
     private $projectService;
 
     /**
+     * @var HistoryService
+     */
+    private $historyService;
+
+    /**
+     * @var DateValidator
+     */
+    private $dateValidator;
+
+    /**
      * Initializes the project service
      * @return void
      */
     public function onConstruct(): void
     {
-        $this->projectService = $this->getDi()->get(ProjectService::class);
+        $getDI                       = $this->getDi();
+        $this->projectService        = $getDI->get(ProjectService::class);
+        $this->historyService        = $getDI->get(HistoryService::class);
+        $this->dateValidator         = $getDI->get(DateValidator::class);
     }
 
     /**
@@ -83,6 +98,48 @@ class ProjectController extends Controller
         $this->view->setVar('errors', $errors);
         $this->view->setVar('project', $this->projectService->getProject($id));
         $view = $this->view->render('project', 'edit');
+
+        return $this->response->setContent($view->getContent());
+    }
+
+    /**
+     * It sends the projects to view, in order to choose the project for showing its history.
+     * Its route is project/history
+     * @return ResponseInterface
+     */
+    public function beforeHistoryAction(): ResponseInterface
+    {
+        $this->view->setVar('projects', $this->projectService->getSortedProjects());
+        $view = $this->view->render('Project', 'beforeHistory');
+
+        return $this->response->setContent($view->getContent());
+    }
+
+    /**
+     * Defines the history action.
+     * its route is project/history/id
+     * @param int $id
+     * @return ResponseInterface
+     */
+    public function historyAction(int $id): ResponseInterface
+    {
+        $dateInterval = $this->request->getPost();
+        $validator = $this->dateValidator->validateDateInterval($dateInterval);
+        $errors = $validator->getMessages();
+
+        if (0 == $errors->count()) {
+            $historyAssignments = $this->historyService->getProjectHistoryAssignments(
+                $id,
+                $dateInterval['start'],
+                $dateInterval['end']
+            );
+            $this->view->setVar('historyAssignments', $historyAssignments);
+        }
+
+        $this->view->setVar('project', $this->projectService->getProject($id));
+        $this->view->setVar('hasErrors', $validator->hasErrors());
+        $this->view->setVar('errors', $errors);
+        $view = $this->view->render('project', 'history');
 
         return $this->response->setContent($view->getContent());
     }

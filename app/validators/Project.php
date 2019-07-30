@@ -22,16 +22,12 @@ class Project extends Base
         );
 
         $this->add(
-            'name',
+            ['name', 'description'],
             new PresenceOf([
-                'message' => 'The name is required.',
-            ])
-        );
-
-        $this->add(
-            'description',
-            new PresenceOf([
-                'message' => 'The description is required.',
+                'message' => [
+                    'name' => 'The name is required.',
+                    'description' => 'The description is required.'
+                    ],
             ])
         );
 

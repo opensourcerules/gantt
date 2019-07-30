@@ -1,0 +1,31 @@
+<h3 class='p-4'>Choose worker to show its history</h3>
+
+<div class="container">
+
+    <div class="row font-weight-bold bg-light border p-2">
+        <div class="col">
+            First Name
+        </div>
+        <div class="col">
+            Last Name
+        </div>
+        <div class="col">
+            Email
+        </div>
+    </div>
+
+    {% for worker in workers %}
+    <div class="row border border-top-0 p-1">
+        <div class="col">
+            {{ link_to(['for': 'historyWorker', 'id': worker.id], worker.firstName, 'class': 'text-dark') }}
+        </div>
+        <div class="col">
+            {{ link_to(['for': 'historyWorker', 'id': worker.id], worker.lastName, 'class': 'text-dark') }}
+        </div>
+        <div class="col">
+            {{ link_to(['for': 'historyWorker', 'id': worker.id], worker.email, 'class': 'text-dark') }}
+        </div>
+    </div>
+    {% endfor %}
+
+</div>

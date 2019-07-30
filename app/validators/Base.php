@@ -14,11 +14,10 @@ class Base extends Validation
     {
         $errors = $this->getMessages();
 
-        if (count($errors->filter('submit')) == 1 && $errors->count() == 1) {
+        if ((count($errors->filter('submit')) == 1 && $errors->count() == 1) || $errors->count() == 0) {
             return false;
         }
 
         return true;
     }
-
 }

@@ -39,7 +39,8 @@ class RegisterServices implements ServiceProviderInterface
                 $di->get(WorkerValidator::class),
                 $di->get(WorkerProjectService::class),
                 $di->get(HistoryService::class),
-                $di->get(WorkerProjectValidator::class)
+                $di->get(WorkerProjectValidator::class),
+                $di->get('modelsManager')
             );
         });
         
@@ -48,7 +49,8 @@ class RegisterServices implements ServiceProviderInterface
          */
         $di->setShared(ProjectService::class, function () use ($di) {
             return new ProjectService(
-                $di->get(ProjectValidator::class)
+                $di->get(ProjectValidator::class),
+                $di->get('modelsManager')
             );
         });
 
@@ -60,6 +62,10 @@ class RegisterServices implements ServiceProviderInterface
         /**
          * Register History service
          */
-        $di->setShared(HistoryService::class, HistoryService::class);
+        $di->setShared(HistoryService::class, function () use ($di) {
+            return new HistoryService(
+                $di->get('modelsManager')
+            );
+        });
     }
 }

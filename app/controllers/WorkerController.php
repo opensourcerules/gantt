@@ -8,6 +8,8 @@ use GanttDashboard\App\Services\Worker as WorkerService;
 use GanttDashboard\App\Services\Project as ProjectService;
 use GanttDashboard\App\Models\Workers;
 use Phalcon\Http\ResponseInterface;
+use GanttDashboard\App\Validators\DateInterval as DateValidator;
+use GanttDashboard\App\Services\History as HistoryService;
 
 class WorkerController extends Controller
 {
@@ -27,6 +29,16 @@ class WorkerController extends Controller
     private $authenticationService;
 
     /**
+     * @var HistoryService
+     */
+    private $historyService;
+
+    /**
+     * @var DateValidator
+     */
+    private $dateValidator;
+
+    /**
      * Initializes the services
      * @return void
      */
@@ -36,6 +48,8 @@ class WorkerController extends Controller
         $this->workerService         = $getDI->get(WorkerService::class);
         $this->projectService        = $getDI->get(ProjectService::class);
         $this->authenticationService = $getDI->get(AuthenticationService::class);
+        $this->historyService        = $getDI->get(HistoryService::class);
+        $this->dateValidator         = $getDI->get(DateValidator::class);
     }
 
     /**
@@ -173,6 +187,91 @@ class WorkerController extends Controller
         $this->view->setVar('workerProjects', $worker->getWorkersProjects());
         $this->view->setVar('workerHistory', $worker->getHistory());
         $view = $this->view->render('worker', 'assign');
+
+        return $this->response->setContent($view->getContent());
+    }
+
+    /**
+     * It sends the workers to view, in order to choose the worker.
+     * Its route is worker/unassign
+     * @return ResponseInterface
+     */
+    public function beforeUnAssignAction(): ResponseInterface
+    {
+        $this->view->setVar('workers', $this->workerService->getSortedAssignedWorkers());
+        $view = $this->view->render('worker', 'beforeUnAssign');
+
+        return $this->response->setContent($view->getContent());
+    }
+
+    /**
+     * If admin is logged in, sends worker to view.
+     * its route is worker/unassign/id
+     * @param int $id
+     * @return ResponseInterface
+     */
+    public function unAssignAction(int $id): ResponseInterface
+    {
+        $unAssignments = $this->request->getPost();
+        $validator = $this->workerService->unAssign($id, $unAssignments);
+        $errors = $validator->getMessages();
+
+        if (0 == $errors->count()) {
+            $this->flashSession->success('Worker unassign successful');
+            $this->view->disable();
+
+            return $this->response->redirect(['for' => 'beforeUnAssignWorker']);
+        }
+
+        $this->view->setVar('hasErrors', $validator->hasErrors());
+        $this->view->setVar('errors', $errors);
+        $worker = $this->workerService->getWorker($id);
+        $this->view->setVar('worker', $worker);
+        $this->view->setVar('projects', $worker->getProjects());
+        $this->view->setVar('workerHistory', $worker->getHistory());
+        $view = $this->view->render('worker', 'unAssign');
+
+        return $this->response->setContent($view->getContent());
+    }
+
+    /**
+     * It sends the workers to view, in order to choose the worker for showing its history.
+     * Its route is worker/history
+     * @return ResponseInterface
+     */
+    public function beforeHistoryAction(): ResponseInterface
+    {
+        $this->view->setVar('workers', $this->workerService->getSortedWorkers());
+        $view = $this->view->render('worker', 'beforeHistory');
+
+        return $this->response->setContent($view->getContent());
+    }
+
+    /**
+     * Defines the history action.
+     * its route is worker/history/id
+     * @param int $id
+     * @return ResponseInterface
+     */
+    public function historyAction(int $id): ResponseInterface
+    {
+        $dateInterval = $this->request->getPost();
+        $validator = $this->dateValidator->validateDateInterval($dateInterval);
+        $errors = $validator->getMessages();
+
+        if (0 == $errors->count()) {
+            $historyAssignments = $this->historyService->getWorkerHistoryAssignments(
+                $id,
+                $dateInterval['start'],
+                $dateInterval['end']
+            );
+            $this->view->setVar('historyAssignments', $historyAssignments);
+        }
+
+        $this->view->setVar('worker', $this->workerService->getWorker($id));
+        $this->view->setVar('hasErrors', $validator->hasErrors());
+        $this->view->setVar('errors', $errors);
+        $view = $this->view->render('worker', 'history');
 
         return $this->response->setContent($view->getContent());
     }

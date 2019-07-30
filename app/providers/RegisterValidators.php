@@ -7,6 +7,7 @@ use Phalcon\DiInterface;
 use GanttDashboard\App\Validators\Worker as WorkerValidator;
 use GanttDashboard\App\Validators\Project as ProjectValidator;
 use GanttDashboard\App\Validators\WorkerProject as WorkerProjectValidator;
+use GanttDashboard\App\Validators\DateInterval as DateValidator;
 
 class RegisterValidators implements ServiceProviderInterface
 {
@@ -22,5 +23,7 @@ class RegisterValidators implements ServiceProviderInterface
         $di->setShared(ProjectValidator::class, ProjectValidator::class);
 
         $di->setShared(WorkerProjectValidator::class, WorkerProjectValidator::class);
+
+        $di->setShared(DateValidator::class, DateValidator::class);
     }
 }

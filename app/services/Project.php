@@ -3,9 +3,12 @@
 namespace GanttDashboard\App\Services;
 
 use GanttDashboard\App\Models\Projects;
+use GanttDashboard\App\Models\WorkersProjects;
 use GanttDashboard\App\Validators\Project as ProjectValidator;
 use Phalcon\Mvc\Model\ResultsetInterface;
+use Phalcon\Mvc\Model\Resultset\Simple as ResultsetSimple;
 use Phalcon\Mvc\Model;
+use Phalcon\Mvc\Model\Manager as ModelsManager;
 
 class Project
 {
@@ -15,13 +18,20 @@ class Project
     private $projectValidator;
 
     /**
+     * @var ModelsManager
+     */
+    private $modelsManager;
+
+    /**
      * Constructs the needed service, set in DI, for validators service
      * @param ProjectValidator $projectValidator
      */
     public function __construct(
-        ProjectValidator $projectValidator
+        ProjectValidator $projectValidator,
+        ModelsManager $modelsManager
     ) {
         $this->projectValidator = $projectValidator;
+        $this->modelsManager = $modelsManager;
     }
 
     /**
@@ -52,6 +62,26 @@ class Project
         return Projects::find([
             'order' => 'name, description'
         ]);
+    }
+
+    /**
+     * Gets all the unassigned projects sorted from database via model
+     * @return ResultsetSimple
+     */
+    public function getUnAssignedProjects(): ResultsetSimple
+    {
+        return $this->modelsManager->createBuilder()
+            ->columns([
+                'id',
+                'name',
+                'description'
+            ])
+            ->from(Projects::class)
+            ->leftJoin(WorkersProjects::class, 'id = workersProjects.projectId', 'workersProjects')
+            ->where('workersProjects.projectId IS NULL')
+            ->orderBy('name, description')
+            ->getQuery()
+            ->execute();
     }
 
     /**

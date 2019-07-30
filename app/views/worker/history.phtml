@@ -1,0 +1,155 @@
+<h3 class='p-4'>History assignments for {{ worker.getFirstName() }} {{ worker.getLastName() }}</h3>
+<div class="container">
+
+    {{ form(['for': 'historyWorker', 'id': worker.getId()], 'method': 'post', 'id': 'worker_history_form') }}
+
+        <div class="row font-weight-bold bg-light border p-2">
+
+            {% if request.getPost('submit') %}
+
+                <div class="col">
+                    From: {{ date_field('name': 'start', 'id': 'dateStart', 'value': request.getPost('start')) }}
+                </div>
+                <div class="col">
+                    To: {{ date_field('name': 'end','id': 'dateEnd', 'value': request.getPost('end')) }}
+                </div>
+
+            {% else %}
+
+                <div class="col">
+                    From: {{ date_field('name': 'start', 'id': 'dateStart', 'value': date('Y-m-d', time())) }}
+                </div>
+                <div class="col">
+                    To: {{ date_field('name': 'end','id': 'dateEnd', 'value': date('Y-m-d', time())) }}
+                </div>
+
+            {% endif %}
+
+            <div class="col">
+                {{ submit_button('Show history', 'class': 'btn btn-primary btn-large', 'name': 'submit') }}
+            </div>
+        </div>
+
+        {% if hasErrors %}
+
+            <div class="row border border-top-0 p-1">
+                <div class="col">
+
+                    {% for error in errors.filter('start') %}
+
+                        <div class='text-danger'>
+                            {{ error.getMessage() }}
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+                <div class="col">
+
+                    {% for error in errors.filter('end') %}
+
+                        <div class='text-danger'>
+                            {{ error.getMessage() }}
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+                <div class="col">
+                </div>
+            </div>
+
+        {% endif %}
+
+    {{  endform() }}
+
+    {% if historyAssignments is defined %}
+
+        {% if historyAssignments.count() == 0 %}
+
+            <h4 class='p-4'>No history assignments found</h4>
+
+        {% else %}
+
+            <div class="row font-weight-bold bg-light border border-top-0 p-2">
+                <div class="col">
+                    Project Name
+                </div>
+                <div class="col">
+
+                    <div class="row">
+                        <div class="col">
+                            Assign Date
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            Reason
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col">
+
+                    <div class="row">
+                        <div class="col">
+                            Unassign Date
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            Reason
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% for historyAssignment in historyAssignments %}
+
+                <div class="row border border-top-0 p-1">
+                    <div class="col">
+                        {{ historyAssignment.name }}
+                    </div>
+                    <div class="col">
+
+                        <div class="row">
+                            <div class="col">
+                                {{ date("d-m-Y G:i:s", historyAssignment.dateStart) }}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                {{ (historyAssignment.reason|json_decode).assign }}
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col">
+
+                        <div class="row">
+                            <div class="col">
+                                {% if historyAssignment.dateEnd is not null %}
+
+                                    {{ date("d-m-Y G:i:s", historyAssignment.dateEnd) }}
+
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                {{ (historyAssignment.reason|json_decode).unassign }}
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    {% endif %}
+
+</div>

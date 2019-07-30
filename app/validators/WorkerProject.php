@@ -6,7 +6,6 @@ use Phalcon\Validation\Validator\PresenceOf;
 use Phalcon\Validation\Message;
 use GanttDashboard\App\Services\Project as ProjectService;
 
-
 class WorkerProject extends Base
 {
     /**
@@ -26,7 +25,7 @@ class WorkerProject extends Base
      * Executed before validation
      *
      * @param array $data
-     * @param object $entity
+     * @param mixed $entity
      * @param \Phalcon\Validation\Message\Group $messages
      * @return void
      */
